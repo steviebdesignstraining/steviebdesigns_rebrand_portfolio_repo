@@ -36,7 +36,7 @@ export default function ContactForm() {
       await new Promise((r) => setTimeout(r, 600));
       setSuccess("Thanks! Your message has been sent.");
       setState({ name: "", email: "", message: "", honeypot: "" });
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);

@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "type-check": "tsc --noEmit",
+    "preview": "npm run build && npm run start",
+    "clean": "rm -rf .next out",
+    "analyze": "ANALYZE=true npm run build"
   },
   "dependencies": {
     "framer-motion": "12.23.12",
