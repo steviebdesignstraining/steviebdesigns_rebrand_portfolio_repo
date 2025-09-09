@@ -11,7 +11,9 @@
     "type-check": "tsc --noEmit",
     "preview": "npm run build && npm run start",
     "clean": "rm -rf .next out",
-    "analyze": "ANALYZE=true npm run build"
+    "analyze": "ANALYZE=true npm run build",
+    "test:setup": "./scripts/test-setup.sh",
+    "test:all": "npm run lint && npm run type-check && npm run build"
   },
   "dependencies": {
     "framer-motion": "12.23.12",
