@@ -9,9 +9,12 @@
 
 ## Tech
 
-- Next.js (App Router), TypeScript, TailwindCSS
+- Next.js 15 (App Router), TypeScript, TailwindCSS
 - Dark/Light: next-themes
-- Animations: framer-motion (ready to use)
+- Animations: framer-motion
+- SEO: Sitemap, robots.txt, meta tags
+- Icons: Dynamic favicon and app icons
+- Error Handling: Custom 404/500 pages
 
 ## Structure
 
