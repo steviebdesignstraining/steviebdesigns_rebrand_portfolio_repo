@@ -19,11 +19,19 @@
 - `src/app/blog/page.tsx`: Blog placeholder (WordPress REST to integrate)
 - `public/logo/*`: Logo assets
 
-## WordPress API (to wire up)
+## WordPress API Setup
 
-1. Set `NEXT_PUBLIC_WP_API_URL` in `.env.local`, e.g. `https://your-wp-site.com/wp-json/wp/v2`
-2. Fetch posts in `src/app/blog/page.tsx` with Next.js `fetch()` and display
-3. Add filters for categories/tags as needed
+1. Copy `env.example` to `.env.local`
+2. Set `NEXT_PUBLIC_WP_API_URL` to your WordPress REST API endpoint
+3. Restart dev server to load posts and filters
+4. Blog page supports category/tag filtering via URL params
+
+Example:
+```bash
+cp env.example .env.local
+# Edit .env.local with your WordPress URL
+npm run dev
+```
 
 ## Deployment
 

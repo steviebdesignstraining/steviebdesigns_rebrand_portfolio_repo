@@ -1,12 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import MobileMenu from "@/components/MobileMenu";
+import AnimatedBackground from "@/components/AnimatedBackground";
 import { MotionDiv } from "@/components/motion";
 import ContactForm from "@/components/ContactForm";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
+      <AnimatedBackground />
       <header className="sticky top-0 z-40 backdrop-blur bg-background/80 border-b border-black/5 dark:border-white/10">
         <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -19,10 +22,11 @@ export default function Home() {
             <Link href="#gallery" className="hover:opacity-80">Gallery</Link>
             <Link href="#services" className="hover:opacity-80">Services</Link>
             <Link href="#experience" className="hover:opacity-80">Experience</Link>
-            <Link href="#blog" className="hover:opacity-80">Blog</Link>
+            <Link href="/blog" className="hover:opacity-80">Blog</Link>
             <Link href="#contact" className="hover:opacity-80">Contact</Link>
             <ThemeToggle />
           </div>
+          <MobileMenu />
         </nav>
       </header>
 
