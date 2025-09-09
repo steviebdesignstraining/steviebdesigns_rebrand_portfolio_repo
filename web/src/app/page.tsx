@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import ThemeToggle from "@/src/components/ThemeToggle";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
             <Link href="#experience" className="hover:opacity-80">Experience</Link>
             <Link href="#blog" className="hover:opacity-80">Blog</Link>
             <Link href="#contact" className="hover:opacity-80">Contact</Link>
+            <ThemeToggle />
           </div>
         </nav>
       </header>
