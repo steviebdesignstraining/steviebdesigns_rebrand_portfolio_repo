@@ -35,4 +35,29 @@ npm run dev
 
 ## Deployment
 
-- Recommended: Vercel. Push repo and import project.
+### Vercel (Recommended)
+
+1. Push your code to GitHub
+2. Import project in [Vercel Dashboard](https://vercel.com/dashboard)
+3. Set environment variables:
+   - `NEXT_PUBLIC_WP_API_URL` (your WordPress API endpoint)
+4. Deploy automatically on every push
+
+### Manual Deployment
+
+```bash
+npm run build
+npm run start
+```
+
+### Environment Variables
+
+Copy `env.example` to `.env.local` and configure:
+- `NEXT_PUBLIC_WP_API_URL`: WordPress REST API endpoint
+
+### Performance
+
+- Static generation for optimal performance
+- Image optimization with Next.js
+- Automatic code splitting
+- Edge caching for assets
