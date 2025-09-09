@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import { MotionDiv } from "@/components/motion";
+import ContactForm from "@/components/ContactForm";
 
 export default function Home() {
   return (
@@ -26,7 +28,7 @@ export default function Home() {
 
       <main className="flex-1">
         <section id="home" className="relative flex items-center justify-center text-center py-24 sm:py-36">
-          <div className="space-y-6 px-4">
+          <MotionDiv className="space-y-6 px-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="flex justify-center">
               <Image src="/logo/steviebdesigns Main Logo.png" alt="Steviebdesigns Logo" width={360} height={160} priority />
             </div>
@@ -38,26 +40,26 @@ export default function Home() {
               <a href="#about" className="px-5 py-2 rounded-md bg-foreground text-background text-sm sm:text-base hover:opacity-90">About Me</a>
               <a href="#contact" className="px-5 py-2 rounded-md border border-foreground/20 text-sm sm:text-base hover:bg-foreground/5">Contact</a>
             </div>
-          </div>
+          </MotionDiv>
         </section>
 
-        <section id="about" className="max-w-5xl mx-auto px-4 py-16">
+        <MotionDiv id="about" className="max-w-5xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">About Me</h2>
           <p className="mt-4 text-foreground/80">
             Detail-oriented and innovative QA Engineer with over 10 years of hands-on experience in both manual and automated software testing across mobile and web platforms...
           </p>
-        </section>
+        </MotionDiv>
 
-        <section id="gallery" className="max-w-6xl mx-auto px-4 py-16">
+        <MotionDiv id="gallery" className="max-w-6xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Gallery</h2>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div className="aspect-video rounded-lg bg-foreground/5" />
             <div className="aspect-video rounded-lg bg-foreground/5" />
             <div className="aspect-video rounded-lg bg-foreground/5" />
           </div>
-        </section>
+        </MotionDiv>
 
-        <section id="services" className="max-w-6xl mx-auto px-4 py-16">
+        <MotionDiv id="services" className="max-w-6xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Services</h2>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
@@ -73,26 +75,21 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </section>
+        </MotionDiv>
 
-        <section id="experience" className="max-w-5xl mx-auto px-4 py-16">
+        <MotionDiv id="experience" className="max-w-5xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Experience</h2>
           <div className="mt-6 grid gap-4">
             <div className="rounded-lg border border-foreground/10 p-5">
               <p className="text-sm text-foreground/80">Timeline and roles coming soon.</p>
             </div>
           </div>
-        </section>
+        </MotionDiv>
 
-        <section id="contact" className="max-w-3xl mx-auto px-4 py-16">
+        <MotionDiv id="contact" className="max-w-3xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Contact</h2>
-          <form className="mt-6 grid gap-3">
-            <input className="rounded-md border border-foreground/20 px-3 py-2 bg-background" placeholder="Name" />
-            <input className="rounded-md border border-foreground/20 px-3 py-2 bg-background" placeholder="Email" type="email" />
-            <textarea className="rounded-md border border-foreground/20 px-3 py-2 bg-background" placeholder="Message" rows={5} />
-            <button type="submit" className="px-5 py-2 rounded-md bg-foreground text-background w-fit">Send</button>
-          </form>
-        </section>
+          <ContactForm />
+        </MotionDiv>
       </main>
 
       <footer className="border-t border-foreground/10 py-8 text-sm text-center text-foreground/70">
