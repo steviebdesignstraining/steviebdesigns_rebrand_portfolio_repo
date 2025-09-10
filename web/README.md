@@ -1,11 +1,35 @@
-# Steviebdesigns Portfolio
+# 🎨 Steviebdesigns Portfolio
 
-## Commands
+A modern, professional portfolio website built with Next.js 15, TypeScript, and TailwindCSS. Features dark/light theme, interactive gallery, WordPress blog integration, and smooth animations.
 
-- Install: `npm install`
-- Dev: `npm run dev`
-- Build: `npm run build`
-- Start: `npm run start`
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Start production server
+npm run start
+```
+
+## 📋 Available Commands
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+- `npm run lint:fix` - Fix ESLint issues
+- `npm run type-check` - TypeScript validation
+- `npm run test:setup` - Comprehensive setup test
+- `npm run test:all` - Run all tests
+- `npm run clean` - Clean build artifacts
 
 ## Tech
 
@@ -22,21 +46,38 @@
 - `src/app/blog/page.tsx`: Blog placeholder (WordPress REST to integrate)
 - `public/logo/*`: Logo assets
 
-## WordPress API Setup
+## 🔧 Configuration
 
-1. Copy `env.example` to `.env.local`
-2. Set `NEXT_PUBLIC_WP_API_URL` to your WordPress REST API endpoint
+### Environment Variables
+
+Copy `env.example` to `.env.local` and configure:
+
+```bash
+cp env.example .env.local
+```
+
+Required variables:
+- `NEXT_PUBLIC_WP_API_URL` - WordPress REST API endpoint
+- `NEXT_PUBLIC_SITE_URL` - Your production domain
+
+Optional variables:
+- `NEXT_PUBLIC_GA_ID` - Google Analytics tracking ID
+
+### WordPress Integration
+
+1. Set up WordPress site with REST API enabled
+2. Add `NEXT_PUBLIC_WP_API_URL` to `.env.local`
 3. Restart dev server to load posts and filters
 4. Blog page supports category/tag filtering via URL params
 
 Example:
 ```bash
-cp env.example .env.local
-# Edit .env.local with your WordPress URL
-npm run dev
+# .env.local
+NEXT_PUBLIC_WP_API_URL=https://your-wordpress-site.com/wp-json/wp/v2
+NEXT_PUBLIC_SITE_URL=https://steviebdesigns.co.uk
 ```
 
-## Deployment
+## 🚀 Deployment
 
 ### Vercel (Recommended)
 
@@ -44,7 +85,14 @@ npm run dev
 2. Import project in [Vercel Dashboard](https://vercel.com/dashboard)
 3. Set environment variables:
    - `NEXT_PUBLIC_WP_API_URL` (your WordPress API endpoint)
+   - `NEXT_PUBLIC_SITE_URL` (your production domain)
 4. Deploy automatically on every push
+
+### Other Platforms
+
+- **Netlify**: Static site hosting
+- **Railway**: Full-stack deployment
+- **Self-hosted**: Node.js server
 
 ### Manual Deployment
 
@@ -53,14 +101,26 @@ npm run build
 npm run start
 ```
 
-### Environment Variables
+## ✨ Features
 
-Copy `env.example` to `.env.local` and configure:
-- `NEXT_PUBLIC_WP_API_URL`: WordPress REST API endpoint
+- **Modern Design** - Clean, professional UI with smooth animations
+- **Dark/Light Theme** - Animated backgrounds and smooth transitions
+- **Responsive Layout** - Mobile-first design with hamburger menu
+- **Interactive Gallery** - Portfolio showcase with lightbox
+- **Experience Timeline** - Professional work history
+- **WordPress Blog** - Dynamic content management
+- **Contact Form** - Validated with spam protection
+- **SEO Optimized** - Sitemap, robots.txt, meta tags
+- **Analytics Ready** - Google Analytics integration
+- **Error Handling** - Custom 404/500 pages
+- **Performance** - Static generation, code splitting
+- **Security** - Headers, validation, CSRF protection
 
-### Performance
+## 📊 Performance
 
-- Static generation for optimal performance
-- Image optimization with Next.js
-- Automatic code splitting
-- Edge caching for assets
+- **Bundle Size**: ~185kB first load
+- **Build Time**: ~2-4 seconds
+- **Static Generation**: Pre-rendered pages
+- **Image Optimization**: Next.js automatic optimization
+- **Code Splitting**: Automatic optimization
+- **Edge Caching**: Asset optimization
