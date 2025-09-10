@@ -54,7 +54,7 @@ export default function MobileMenu() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+            <div className="absolute inset-0 bg-background" onClick={() => setIsOpen(false)} />
             <motion.div
               className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-background border-l border-foreground/10 shadow-xl"
               initial={{ x: "100%" }}
@@ -62,12 +62,9 @@ export default function MobileMenu() {
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <span className="font-semibold text-lg">Menu</span>
-                  <ThemeToggle />
-                </div>
-                <nav className="space-y-4">
+              <div className="p-6 flex bg-[rgb(114,204,215)] shadow-[1px_1px_3px_0_rgba(210,71,71,1)] font-black justify-center items-center sm:items-stretch sm:justify-start">
+                <div className="flex items-center justify-between mb-8" />
+                <nav className="space-y-4 font-extrabold flex flex-col items-center justify-center mx-auto my-auto sm:my-0 sm:items-start sm:justify-start">
                   {menuItems.map((item) => (
                     <Link
                       key={item.href}
@@ -79,6 +76,9 @@ export default function MobileMenu() {
                     </Link>
                   ))}
                 </nav>
+                <div className="mt-6 rounded p-1 px-2 font-black">
+                  <ThemeToggle />
+                </div>
               </div>
             </motion.div>
           </motion.div>

@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col relative">
       <AnimatedBackground />
-      <header className="sticky top-0 z-40 backdrop-blur bg-background/80 border-b border-black/5 dark:border-white/10">
+      <header className="sticky top-0 z-40 backdrop-blur bg-background border-b border-black/5 dark:border-white/10">
         <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image src="/logo/steviebdesigns Logo Symbol.png" alt="Steviebdesigns" width={36} height={36} />
@@ -33,7 +33,7 @@ export default function Home() {
       </header>
 
       <main className="flex-1">
-        <section id="home" className="relative flex items-center justify-center text-center py-24 sm:py-36">
+        <section id="home" className="relative flex items-center justify-center text-center py-24 sm:py-36 scroll-mt-20">
           <MotionDiv className="space-y-6 px-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <div className="flex justify-center">
               <Image src="/logo/steviebdesigns Main Logo.png" alt="Steviebdesigns Logo" width={360} height={160} priority />
@@ -49,21 +49,21 @@ export default function Home() {
           </MotionDiv>
         </section>
 
-        <MotionDiv id="about" className="max-w-5xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+        <MotionDiv id="about" className="max-w-5xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">About Me</h2>
           <p className="mt-4 text-foreground/80">
             Detail-oriented and innovative QA Engineer with over 10 years of hands-on experience in both manual and automated software testing across mobile and web platforms...
           </p>
         </MotionDiv>
 
-        <MotionDiv id="gallery" className="max-w-6xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+        <MotionDiv id="gallery" className="max-w-6xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Gallery</h2>
           <div className="mt-6">
             <Gallery />
           </div>
         </MotionDiv>
 
-        <MotionDiv id="services" className="max-w-6xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+        <MotionDiv id="services" className="max-w-6xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Services</h2>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
@@ -81,14 +81,14 @@ export default function Home() {
           </div>
         </MotionDiv>
 
-        <MotionDiv id="experience" className="max-w-5xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+        <MotionDiv id="experience" className="max-w-5xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Experience</h2>
           <div className="mt-6">
             <ExperienceTimeline />
           </div>
         </MotionDiv>
 
-        <MotionDiv id="contact" className="max-w-3xl mx-auto px-4 py-16" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+        <MotionDiv id="contact" className="max-w-3xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Contact</h2>
           <ContactForm />
         </MotionDiv>
