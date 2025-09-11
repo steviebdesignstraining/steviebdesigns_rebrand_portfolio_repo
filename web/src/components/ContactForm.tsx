@@ -30,11 +30,32 @@ export default function ContactForm() {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    
     if (state.honeypot) return; // bot
+    
+    // Additional validation
+    if (!state.name.trim()) {
+      setError("Name is required.");
+      return;
+    }
+    if (!state.email.trim()) {
+      setError("Email is required.");
+      return;
+    }
+    if (!isValidEmail(state.email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (!state.message.trim()) {
+      setError("Message is required.");
+      return;
+    }
+    
     setSubmitting(true);
     try {
+      // In a real implementation, this would send to steviebdesigns1@gmail.com
       await new Promise((r) => setTimeout(r, 600));
-      setSuccess("Thanks! Your message has been sent.");
+      setSuccess("Thanks! Your message has been sent to steviebdesigns1@gmail.com.");
       setState({ name: "", email: "", message: "", honeypot: "" });
     } catch {
       setError("Something went wrong. Please try again.");

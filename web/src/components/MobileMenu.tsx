@@ -14,6 +14,7 @@ export default function MobileMenu() {
     { href: "#gallery", label: "Gallery" },
     { href: "#services", label: "Services" },
     { href: "#experience", label: "Experience" },
+    { href: "#education", label: "Education" },
     { href: "/blog", label: "Blog" },
     { href: "#contact", label: "Contact" },
   ];
@@ -54,29 +55,41 @@ export default function MobileMenu() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="absolute inset-0 bg-background" onClick={() => setIsOpen(false)} />
+            <div className="absolute inset-0 bg-black" onClick={() => setIsOpen(false)} />
             <motion.div
-              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-background border-l border-foreground/10 shadow-xl"
+              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-black border-l border-white/10 shadow-xl"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
             >
-              <div className="p-6 flex bg-[rgb(114,204,215)] shadow-[1px_1px_3px_0_rgba(210,71,71,1)] font-black justify-center items-center sm:items-stretch sm:justify-start">
-                <div className="flex items-center justify-between mb-8" />
-                <nav className="space-y-4 font-extrabold flex flex-col items-center justify-center mx-auto my-auto sm:my-0 sm:items-start sm:justify-start">
+              <div className="p-6 flex flex-col justify-center items-center h-full">
+                <nav className="space-y-6 text-center">
                   {menuItems.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block py-3 px-4 rounded-md hover:bg-foreground/5 transition-colors"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
+                    item.href === "/blog" ? (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block py-3 px-4 text-white text-lg hover:opacity-80 transition-opacity"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block py-3 px-4 text-white text-lg hover:opacity-80 transition-opacity"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {item.label}
+                      </Link>
+                    )
                   ))}
                 </nav>
-                <div className="mt-6 rounded p-1 px-2 font-black">
+                <div className="mt-8">
                   <ThemeToggle />
                 </div>
               </div>

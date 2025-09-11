@@ -3,6 +3,7 @@ import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
 import MobileMenu from "@/components/MobileMenu";
 import AnimatedBackground from "@/components/AnimatedBackground";
+import PolaroidStack from "@/components/PolaroidStack";
 import { MotionDiv } from "@/components/motion";
 import ContactForm from "@/components/ContactForm";
 import Gallery from "@/components/Gallery";
@@ -24,7 +25,8 @@ export default function Home() {
             <Link href="#gallery" className="hover:opacity-80">Gallery</Link>
             <Link href="#services" className="hover:opacity-80">Services</Link>
             <Link href="#experience" className="hover:opacity-80">Experience</Link>
-            <Link href="/blog" className="hover:opacity-80">Blog</Link>
+            <Link href="#education" className="hover:opacity-80">Education</Link>
+            <a href="/blog" target="_blank" rel="noopener noreferrer" className="hover:opacity-80">Blog</a>
             <Link href="#contact" className="hover:opacity-80">Contact</Link>
             <ThemeToggle />
           </div>
@@ -35,12 +37,12 @@ export default function Home() {
       <main className="flex-1">
         <section id="home" className="relative flex items-center justify-center text-center py-24 sm:py-36 scroll-mt-20">
           <MotionDiv className="space-y-6 px-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <div className="flex justify-center">
-              <Image src="/logo/steviebdesigns Main Logo.png" alt="Steviebdesigns Logo" width={360} height={160} priority />
+            <div className="flex justify-center mb-8">
+              <PolaroidStack />
             </div>
             <h1 className="text-3xl sm:text-5xl font-semibold tracking-tight">Creativity. Innovation. Professionalism.</h1>
             <p className="text-base sm:text-lg text-foreground/80 max-w-2xl mx-auto">
-              QA engineering, automation, and modern web development with a focus on quality and experience.
+              QA engineering, automation, AI-driven solutions, and modern web/application development with a focus on quality, innovation, and user experience.
             </p>
             <div className="flex items-center justify-center gap-3">
               <a href="#about" className="px-5 py-2 rounded-md bg-foreground text-background text-sm sm:text-base hover:opacity-90">About Me</a>
@@ -52,7 +54,7 @@ export default function Home() {
         <MotionDiv id="about" className="max-w-5xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">About Me</h2>
           <p className="mt-4 text-foreground/80">
-            Detail-oriented and innovative QA Engineer with over 10 years of hands-on experience in both manual and automated software testing across mobile and web platforms...
+            Quality Assurance professional with over 10 years of experience in automation and manual testing, expert in test automation and CI/CD pipeline integration. Contracting for over 5 years and seeking both contract and permanent roles. Key achievements include the successful implementation of shift-left QA strategies in two products and the development of high-level automation test scripts using Playwright, Cypress, WebdriverIO, Appium, Detox and Maestro. Seeking a Test Engineer position, where my process evaluation and cross-function team coordination skills can support the business mission of innovating the testing process in a SDLC domain. Proficient in designing, implementing, and managing tests across product suites, with a strong track record in enhancing quality control and assurance metrics. During my tenure, CI/CD pipelines were built and maintained to improve real-time visibility and efficiency, and multiple automation frameworks were evaluated to match team skillsets and project scalability. For more details, visit <a href="https://www.steviebdesigns.co.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">www.steviebdesigns.co.uk</a>.
           </p>
         </MotionDiv>
 
@@ -88,6 +90,37 @@ export default function Home() {
           </div>
         </MotionDiv>
 
+        <MotionDiv id="education" className="max-w-5xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
+          <h2 className="text-2xl sm:text-3xl font-semibold">Education</h2>
+          <div className="mt-6 space-y-6">
+            <div className="border-l-4 border-foreground/20 pl-6">
+              <h3 className="font-semibold text-lg">Bachelor&apos;s Degree in Computer Science</h3>
+              <p className="text-foreground/70 text-sm mt-1">University Name</p>
+              <p className="text-foreground/60 text-sm">2010 - 2014</p>
+              <p className="text-foreground/80 mt-2">
+                Focus on software engineering, database systems, and software testing methodologies.
+              </p>
+            </div>
+            <div className="border-l-4 border-foreground/20 pl-6">
+              <h3 className="font-semibold text-lg">Certifications</h3>
+              <div className="mt-2 space-y-2">
+                <div>
+                  <p className="font-medium">ISTQB Foundation Level</p>
+                  <p className="text-foreground/60 text-sm">International Software Testing Qualifications Board</p>
+                </div>
+                <div>
+                  <p className="font-medium">AWS Certified Solutions Architect</p>
+                  <p className="text-foreground/60 text-sm">Amazon Web Services</p>
+                </div>
+                <div>
+                  <p className="font-medium">Cypress.io Test Automation</p>
+                  <p className="text-foreground/60 text-sm">Cypress.io</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </MotionDiv>
+
         <MotionDiv id="contact" className="max-w-3xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Contact</h2>
           <ContactForm />
@@ -115,6 +148,7 @@ export default function Home() {
                 <Link href="#about" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">About</Link>
                 <Link href="#services" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Services</Link>
                 <Link href="#experience" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Experience</Link>
+                <Link href="#education" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Education</Link>
                 <Link href="/blog" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Blog</Link>
                 <Link href="#contact" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Contact</Link>
               </div>
@@ -125,7 +159,7 @@ export default function Home() {
               <h3 className="font-semibold">Connect</h3>
               <div className="flex gap-4">
                 <a
-                  href="https://linkedin.com/in/stephen-bennett"
+                  href="https://www.linkedin.com/in/stephen-bennett-a81b87b5/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-md bg-foreground/10 hover:bg-foreground/20 transition-colors"
@@ -136,7 +170,7 @@ export default function Home() {
                   </svg>
                 </a>
                 <a
-                  href="https://github.com/stephenbennett"
+                  href="https://github.com/steviebdesignstraining"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-md bg-foreground/10 hover:bg-foreground/20 transition-colors"
