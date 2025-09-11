@@ -24,7 +24,7 @@ const galleryItems: GalleryItem[] = [
     image: "https://i.vimeocdn.com/video/1004013752-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/1004013752/63a102ec88"
+    videoUrl: "https://player.vimeo.com/video/1004013752?h=63a102ec88"
   },
   {
     id: "qa2",
@@ -33,7 +33,7 @@ const galleryItems: GalleryItem[] = [
     image: "https://i.vimeocdn.com/video/866884683-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/866884683"
+    videoUrl: "https://player.vimeo.com/video/866884683?h=cbea33cad5"
   },
   {
     id: "qa3",
@@ -42,7 +42,7 @@ const galleryItems: GalleryItem[] = [
     image: "https://i.vimeocdn.com/video/827256682-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/827256682"
+    videoUrl: "https://player.vimeo.com/video/827256682?h=30db7b3fc1"
   },
   {
     id: "qa4",
@@ -51,7 +51,7 @@ const galleryItems: GalleryItem[] = [
     image: "https://i.vimeocdn.com/video/1045752431-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/1045752431/bbfaac50fb"
+    videoUrl: "https://player.vimeo.com/video/1045752431?h=bbfaac50fb"
   },
   // Design Images
   {
@@ -237,20 +237,16 @@ export default function Gallery() {
             >
               <div className="relative">
                 {selectedItem.type === "video" ? (
-                  <div className="w-full h-[60vh] flex items-center justify-center bg-black">
-                    <a
-                      href={selectedItem.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center w-20 h-20 bg-white/90 rounded-full hover:bg-white transition-colors"
-                    >
-                      <svg className="w-8 h-8 text-foreground ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                    </a>
-                    <p className="absolute bottom-4 left-4 text-white text-sm">
-                      Click to watch on Vimeo
-                    </p>
+                  <div className="w-full h-[60vh]">
+                    <iframe
+                      src={selectedItem.videoUrl}
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                      allowFullScreen
+                      title={selectedItem.title}
+                    />
                   </div>
                 ) : (
                   <Image
