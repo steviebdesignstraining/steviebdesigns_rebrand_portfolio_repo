@@ -30,29 +30,64 @@ async function getPosts(categoryId?: string, tagId?: string): Promise<WpPost[]> 
   const apiRoot = process.env.NEXT_PUBLIC_WP_API_URL;
   if (!apiRoot) return [];
   
-  let url = `${apiRoot.replace(/\/$/, "")}/posts?per_page=9&_embed`;
-  if (categoryId) url += `&categories=${categoryId}`;
-  if (tagId) url += `&tags=${tagId}`;
-  
-  const res = await fetch(url, { next: { revalidate: 300 } });
-  if (!res.ok) return [];
-  return (await res.json()) as WpPost[];
+  try {
+    let url = `${apiRoot.replace(/\/$/, "")}/posts?per_page=9&_embed`;
+    if (categoryId) url += `&categories=${categoryId}`;
+    if (tagId) url += `&tags=${tagId}`;
+    
+    const res = await fetch(url, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      return [];
+    }
+    
+    return (await res.json()) as WpPost[];
+  } catch (error) {
+    console.warn('Failed to fetch WordPress posts:', error);
+    return [];
+  }
 }
 
 async function getCategories(): Promise<WpCategory[]> {
   const apiRoot = process.env.NEXT_PUBLIC_WP_API_URL;
   if (!apiRoot) return [];
-  const res = await fetch(`${apiRoot.replace(/\/$/, "")}/categories?per_page=20`, { next: { revalidate: 300 } });
-  if (!res.ok) return [];
-  return (await res.json()) as WpCategory[];
+  
+  try {
+    const res = await fetch(`${apiRoot.replace(/\/$/, "")}/categories?per_page=20`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      return [];
+    }
+    
+    return (await res.json()) as WpCategory[];
+  } catch (error) {
+    console.warn('Failed to fetch WordPress categories:', error);
+    return [];
+  }
 }
 
 async function getTags(): Promise<WpTag[]> {
   const apiRoot = process.env.NEXT_PUBLIC_WP_API_URL;
   if (!apiRoot) return [];
-  const res = await fetch(`${apiRoot.replace(/\/$/, "")}/tags?per_page=20`, { next: { revalidate: 300 } });
-  if (!res.ok) return [];
-  return (await res.json()) as WpTag[];
+  
+  try {
+    const res = await fetch(`${apiRoot.replace(/\/$/, "")}/tags?per_page=20`, { next: { revalidate: 300 } });
+    if (!res.ok) return [];
+    
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      return [];
+    }
+    
+    return (await res.json()) as WpTag[];
+  } catch (error) {
+    console.warn('Failed to fetch WordPress tags:', error);
+    return [];
+  }
 }
 
 export default async function BlogPage({
