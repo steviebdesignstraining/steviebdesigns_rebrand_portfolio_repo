@@ -94,77 +94,89 @@ export default function Home() {
           <h2 className="text-2xl sm:text-3xl font-semibold">Education & Certifications</h2>
           <div className="mt-6 space-y-6">
             <div className="border-l-4 border-green-500/30 pl-6">
-              <h3 className="font-semibold text-lg">Bachelor of Science in Computer Science</h3>
-              <p className="text-foreground/70 text-sm mt-1">University of Technology</p>
-              <p className="text-foreground/60 text-sm">2010 - 2014</p>
+              <h3 className="font-semibold text-lg">Bachelor of Science in Multimedia and Internet Technology</h3>
+              <p className="text-foreground/70 text-sm mt-1">University of Greenwich</p>
+              <p className="text-foreground/60 text-sm">09/2006 - 06/2010</p>
+              <p className="text-foreground/60 text-sm">London, United Kingdom</p>
               <p className="text-foreground/80 mt-2">
-                Specialized in software engineering, database systems, and software testing methodologies with focus on quality assurance and automation. 
-                Completed projects in web development, multimedia design, and user experience optimization.
+                Comprehensive degree program covering multimedia design, internet technologies, web development, and digital media production. 
+                Focused on practical applications of technology in digital media and web-based solutions.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Software Engineering</span>
-                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Database Systems</span>
-                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Testing Methodologies</span>
-                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Project Management</span>
+                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Multimedia Design</span>
+                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Internet Technology</span>
+                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Web Development</span>
+                <span className="px-2 py-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200 rounded-full">Digital Media</span>
               </div>
             </div>
             
             <div className="border-l-4 border-purple-500/30 pl-6">
-              <h3 className="font-semibold text-lg">Professional Certifications</h3>
+              <h3 className="font-semibold text-lg">Professional Certifications & Training</h3>
               <div className="mt-4 space-y-4">
                 <div className="bg-background/30 rounded-lg p-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-medium">ISTQB Foundation Level</p>
-                      <p className="text-foreground/60 text-sm">International Software Testing Qualifications Board</p>
+                      <p className="font-medium">Pytest with Selenium</p>
+                      <p className="text-foreground/60 text-sm">Completed January 2025</p>
                     </div>
-                    <span className="text-sm text-foreground/60 mt-1 sm:mt-0">2015</span>
+                    <span className="text-sm text-foreground/60 mt-1 sm:mt-0">2025</span>
                   </div>
                   <p className="text-foreground/70 text-sm mt-2">
-                    Foundation level certification in software testing principles, methodologies, and best practices.
+                    Advanced training in Python-based test automation using Pytest framework with Selenium WebDriver for comprehensive web application testing.
                   </p>
                 </div>
                 
                 <div className="bg-background/30 rounded-lg p-4">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                     <div>
-                      <p className="font-medium">AWS Certified Solutions Architect</p>
-                      <p className="text-foreground/60 text-sm">Amazon Web Services</p>
+                      <p className="font-medium">Automation Framework Training</p>
+                      <p className="text-foreground/60 text-sm">Udemy Course</p>
                     </div>
-                    <span className="text-sm text-foreground/60 mt-1 sm:mt-0">2019</span>
+                    <span className="text-sm text-foreground/60 mt-1 sm:mt-0">Recent</span>
                   </div>
                   <p className="text-foreground/70 text-sm mt-2">
-                    Cloud architecture and solutions design certification covering AWS services and DevOps best practices.
-                  </p>
-                </div>
-                
-                <div className="bg-background/30 rounded-lg p-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <p className="font-medium">Cypress.io Test Automation</p>
-                      <p className="text-foreground/60 text-sm">Cypress.io</p>
-                    </div>
-                    <span className="text-sm text-foreground/60 mt-1 sm:mt-0">2020</span>
-                  </div>
-                  <p className="text-foreground/70 text-sm mt-2">
-                    Advanced certification in Cypress test automation framework and modern testing practices.
+                    Completed Udemy course covering different automation framework disciplines with practical project examples showcased in online portfolio.
                   </p>
                 </div>
               </div>
             </div>
             
             <div className="border-l-4 border-blue-500/30 pl-6">
-              <h3 className="font-semibold text-lg">Additional Training & Skills</h3>
+              <h3 className="font-semibold text-lg">Technical Expertise & Skills</h3>
               <div className="mt-2 space-y-2">
-                <div className="flex flex-wrap gap-2">
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Playwright</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">WebdriverIO</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Appium</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Detox</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Maestro</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">CI/CD</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">API Testing</span>
-                  <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Agile Methodologies</span>
+                <div className="mb-3">
+                  <h4 className="text-sm font-medium text-foreground/70 mb-2">Test Automation Frameworks:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Cypress</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Playwright</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Selenium</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Pytest</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Maestro</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Detox</span>
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <h4 className="text-sm font-medium text-foreground/70 mb-2">Programming Languages:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">TypeScript</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">JavaScript</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Python</span>
+                  </div>
+                </div>
+                
+                <div className="mb-3">
+                  <h4 className="text-sm font-medium text-foreground/70 mb-2">Tools & Technologies:</h4>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">GitHub Actions</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Azure DevOps</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">CI/CD</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">API Testing</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Postman</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Swagger</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Agile</span>
+                    <span className="px-2 py-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 rounded-full">Cucumber</span>
+                  </div>
                 </div>
               </div>
             </div>

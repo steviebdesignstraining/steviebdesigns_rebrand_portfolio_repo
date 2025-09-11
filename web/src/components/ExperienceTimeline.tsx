@@ -12,109 +12,255 @@ type ExperienceItem = {
   type: "work" | "education" | "certification";
   employmentType: "Perm" | "Contract" | "Work Experience";
   achievements?: string[];
+  location?: string;
 };
 
 const experienceData: ExperienceItem[] = [
   {
     id: "1",
-    title: "Senior QA Engineer",
-    company: "Tech Solutions Ltd",
-    period: "2020 - Present",
-    description: "Leading QA initiatives for mobile and web applications, implementing automated testing frameworks, and mentoring junior team members.",
-    skills: ["Playwright", "Cypress", "WebdriverIO", "Appium", "CI/CD", "API Testing", "Test Strategy"],
+    title: "Mobile QA Engineer",
+    company: "Stadion",
+    period: "05/2025 - 07/2025",
+    location: "London, United Kingdom",
+    description: "Comprehensive manual testing and automation framework evaluation for mobile applications and web platforms.",
+    skills: ["Maestro", "GitHub Actions", "CI/CD", "Manual Testing", "Exploratory Testing", "Regression Testing", "Agile"],
     type: "work",
     employmentType: "Contract",
     achievements: [
-      "Successfully implemented shift-left QA strategies in two major products",
-      "Developed high-level automation test scripts using Playwright and Cypress",
-      "Built and maintained CI/CD pipelines for improved real-time visibility",
-      "Mentored 3 junior QA engineers and improved team efficiency by 40%"
+      "Championed and implemented shift-left QA approach in two products",
+      "Delivered live demonstrations of three automation frameworks",
+      "Built GitHub Actions CI/CD pipelines with automated reporting",
+      "Led weekly QA training sessions with live demos and video tutorials",
+      "Created comprehensive QA knowledge base and documentation"
     ]
   },
   {
     id: "2",
-    title: "QA Engineer",
-    company: "Digital Innovations Inc",
-    period: "2018 - 2020",
-    description: "Developed comprehensive test strategies for e-commerce platforms, implemented automated regression testing, and collaborated with cross-functional teams.",
-    skills: ["Manual Testing", "Test Automation", "Postman", "Jira", "Agile", "Selenium", "BDD"],
+    title: "Test Engineer",
+    company: "Elsewhen",
+    period: "11/2023 - 06/2024",
+    location: "London, United Kingdom",
+    description: "Test automation using Cypress and Playwright with TypeScript, focusing on API testing and security integration.",
+    skills: ["Cypress", "Playwright", "TypeScript", "Okta", "API Testing", "Swagger", "Postman", "GitHub Actions"],
     type: "work",
-    employmentType: "Perm",
+    employmentType: "Contract",
     achievements: [
-      "Reduced manual testing time by 60% through automation implementation",
-      "Led cross-functional team coordination for quality assurance initiatives",
-      "Enhanced quality control metrics and reduced production bugs by 45%"
+      "Automated positive and negative test cases using Cypress/Playwright with TypeScript",
+      "Implemented Okta authentication for automation scripts with access tokens",
+      "Monitored CI/CD pipelines with GitHub Actions for PR merges",
+      "Introduced Playwright to new projects while phasing out Cypress",
+      "Acted as QA team advocate and spokesman in absence of QA lead"
     ]
   },
   {
     id: "3",
-    title: "Software Tester",
-    company: "WebDev Agency",
-    period: "2016 - 2018",
-    description: "Performed manual and automated testing for various web applications, created test documentation, and ensured quality standards.",
-    skills: ["Manual Testing", "Bug Tracking", "Test Planning", "Cross-browser Testing", "Mobile Testing"],
+    title: "Automation Test Engineer",
+    company: "Kubrick Group",
+    period: "08/2022 - 08/2023",
+    location: "London, United Kingdom",
+    description: "Created QA processes from scratch and automated test cases using Cypress with JavaScript.",
+    skills: ["Cypress", "JavaScript", "Azure DevOps", "API Testing", "GIT", "CI/CD", "Test Strategy"],
     type: "work",
-    employmentType: "Perm",
+    employmentType: "Contract",
     achievements: [
-      "Established comprehensive test documentation standards",
-      "Improved bug detection rate by 35% through enhanced test planning",
-      "Collaborated with development teams to implement quality gates"
+      "Created QA processes from scratch including test strategies and test cases",
+      "Automated Kubrick applications with Cypress and JavaScript",
+      "Created and maintained CI pipelines in Azure DevOps with weekly scheduled runs",
+      "Developed test cases based on requirement-based stories from backlog",
+      "Created comprehensive release reports and documentation"
     ]
   },
   {
     id: "4",
-    title: "Junior QA Analyst",
-    company: "StartupTech Solutions",
-    period: "2014 - 2016",
-    description: "Entry-level position focusing on manual testing, bug reporting, and learning automated testing tools and methodologies.",
-    skills: ["Manual Testing", "Bug Reporting", "Test Case Design", "Agile Methodologies"],
+    title: "Manual Mobile Tester",
+    company: "TikTok",
+    period: "07/2022 - 08/2022",
+    location: "London, United Kingdom",
+    description: "Mobile testing specialist focusing on iOS and Android platforms with exploratory and regression testing.",
+    skills: ["Manual Testing", "iOS Testing", "Android Testing", "Exploratory Testing", "Regression Testing", "Acceptance Criteria"],
     type: "work",
-    employmentType: "Perm",
+    employmentType: "Contract",
     achievements: [
-      "Completed ISTQB Foundation Level certification",
-      "Developed first automated test suite using Selenium",
-      "Improved team communication and documentation processes"
+      "Performed exploratory testing based on acceptance criteria",
+      "Conducted functional and behavioral regression/smoke testing",
+      "Tested both iOS and Android devices comprehensively"
     ]
   },
   {
     id: "5",
-    title: "BSc Computer Science",
-    company: "University of Technology",
-    period: "2010 - 2014",
-    description: "Specialized in software engineering, database systems, and software testing methodologies with focus on quality assurance and automation.",
-    skills: ["Software Engineering", "Database Systems", "Testing Methodologies", "Programming", "Project Management"],
-    type: "education",
-    employmentType: "Work Experience"
+    title: "Automation/Manual QA Tester",
+    company: "Curio",
+    period: "04/2021 - 08/2022",
+    location: "London, United Kingdom",
+    description: "Led automation of QA processes using Cypress with TypeScript and Cucumber for web testing.",
+    skills: ["Cypress", "TypeScript", "Cucumber", "Stripe", "Firebase", "Looker", "Instabug", "Intercom", "A/B Testing"],
+    type: "work",
+    employmentType: "Contract",
+    achievements: [
+      "Automated Curio's web testing and developed comprehensive QA processes",
+      "Established and monitored bug triage dashboard workflow",
+      "Integrated CRM tools like Instabug and Intercom for bug reporting",
+      "Conducted A/B testing and performance monitoring using Firebase and Looker",
+      "Led presentations on QA advancements and new technologies"
+    ]
   },
   {
     id: "6",
-    title: "ISTQB Foundation Level",
-    company: "International Software Testing Qualifications Board",
-    period: "2015",
-    description: "Foundation level certification in software testing principles, methodologies, and best practices.",
-    skills: ["Test Design", "Test Management", "Risk Analysis", "Quality Assurance"],
-    type: "certification",
-    employmentType: "Work Experience"
+    title: "QA Engineer",
+    company: "Efficio",
+    period: "11/2020 - 04/2021",
+    location: "London, United Kingdom",
+    description: "Contract manual testing for procurement tools and systems.",
+    skills: ["Manual Testing", "Procurement Tools", "Quality Assurance"],
+    type: "work",
+    employmentType: "Contract",
+    achievements: [
+      "Performed comprehensive manual testing of procurement tools",
+      "Ensured quality standards for business-critical applications"
+    ]
   },
   {
     id: "7",
-    title: "AWS Certified Solutions Architect",
-    company: "Amazon Web Services",
-    period: "2019",
-    description: "Cloud architecture and solutions design certification covering AWS services and best practices.",
-    skills: ["Cloud Architecture", "AWS Services", "DevOps", "Infrastructure"],
-    type: "certification",
-    employmentType: "Work Experience"
+    title: "Mobile QA Tester",
+    company: "Tempcover",
+    period: "01/2020 - 06/2020",
+    location: "London, United Kingdom",
+    description: "Permanent role focusing on automation and manual testing for car insurance app using Detox and Cucumber.",
+    skills: ["Detox", "Cucumber", "Mobile Testing", "Car Insurance", "Automation", "Manual Testing"],
+    type: "work",
+    employmentType: "Perm",
+    achievements: [
+      "Automated and manually tested new car insurance application",
+      "Used Detox and Cucumber for mobile test automation",
+      "Ensured quality standards for insurance platform"
+    ]
   },
   {
     id: "8",
-    title: "Cypress.io Test Automation",
-    company: "Cypress.io",
-    period: "2020",
-    description: "Advanced certification in Cypress test automation framework and modern testing practices.",
-    skills: ["Cypress", "JavaScript", "Test Automation", "E2E Testing"],
-    type: "certification",
-    employmentType: "Work Experience"
+    title: "Software QA Tester",
+    company: "BBC",
+    period: "12/2019 - 01/2020",
+    location: "London, United Kingdom",
+    description: "Contract manual testing for BBC's toolkit and software systems.",
+    skills: ["Manual Testing", "BBC Toolkit", "Software Testing"],
+    type: "work",
+    employmentType: "Contract",
+    achievements: [
+      "Performed manual testing of BBC's toolkit",
+      "Ensured quality standards for media software"
+    ]
+  },
+  {
+    id: "9",
+    title: "QA Engineer",
+    company: "Clarksons Platou",
+    period: "05/2019 - 08/2019",
+    location: "London, United Kingdom",
+    description: "Contract testing of cloud-based product with data parsing capabilities using Cypress for desktop automation.",
+    skills: ["Cypress", "Cloud Testing", "Data Parsing", "Desktop Automation", "Manual Testing"],
+    type: "work",
+    employmentType: "Contract",
+    achievements: [
+      "Tested cloud-based product with data parsing between applications",
+      "Implemented desktop automation using Cypress",
+      "Ensured data integrity across cloud applications"
+    ]
+  },
+  {
+    id: "10",
+    title: "Android and iOS Application Test Analyst",
+    company: "Tantalum Corporation",
+    period: "05/2018 - 02/2019",
+    location: "London, United Kingdom",
+    description: "Contract testing of Motor Tech application for both iOS and Android using ODB hardware integration.",
+    skills: ["iOS Testing", "Android Testing", "ODB Hardware", "Motor Tech", "Mobile Applications"],
+    type: "work",
+    employmentType: "Contract",
+    achievements: [
+      "Tested Motor Tech application for iOS and Android platforms",
+      "Integrated testing with ODB hardware systems",
+      "Ensured compatibility across mobile platforms"
+    ]
+  },
+  {
+    id: "11",
+    title: "Quality Assurance Manager",
+    company: "Freedman International",
+    period: "09/2017 - 11/2017",
+    location: "London, United Kingdom",
+    description: "Contract QC Manager managing a team of 6 Quality Controllers and wider studio for major accounts including EA Games, Sage, and Fitbit.",
+    skills: ["Team Management", "Quality Control", "EA Games", "Sage", "Fitbit", "Project Management"],
+    type: "work",
+    employmentType: "Contract",
+    achievements: [
+      "Managed team of 6 Quality Controllers and wider studio",
+      "Oversaw projects for major accounts: EA Games, Sage, and Fitbit",
+      "Coordinated between Designers, Developers, Art Workers, and Project Managers"
+    ]
+  },
+  {
+    id: "12",
+    title: "Digital Quality Assurance Manager",
+    company: "William Lea Tag",
+    period: "04/2017 - 09/2017",
+    location: "London, United Kingdom",
+    description: "Permanent role working for H&M testing digital assets, email marketing, web, and video assets.",
+    skills: ["Digital Assets", "Email Marketing", "Web Testing", "Video Assets", "H&M", "Quality Assurance"],
+    type: "work",
+    employmentType: "Perm",
+    achievements: [
+      "Managed digital quality assurance for H&M brand",
+      "Tested digital assets, email marketing, web, and video content",
+      "Ensured brand consistency across digital platforms"
+    ]
+  },
+  {
+    id: "13",
+    title: "Senior Digital Quality Controller",
+    company: "Schawk",
+    period: "06/2015 - 04/2017",
+    location: "London, United Kingdom",
+    description: "Permanent role working for Sky Digital testing digital assets, email marketing, web, and video assets.",
+    skills: ["Digital Assets", "Email Marketing", "Web Testing", "Video Assets", "Sky Digital", "Quality Control"],
+    type: "work",
+    employmentType: "Perm",
+    achievements: [
+      "Managed digital quality control for Sky Digital",
+      "Tested comprehensive range of digital assets and marketing materials",
+      "Ensured quality standards for media content"
+    ]
+  },
+  {
+    id: "14",
+    title: "Account Manager",
+    company: "Telappliant",
+    period: "08/2013 - 06/2015",
+    location: "London, United Kingdom",
+    description: "Account Manager for VoIP solutions managing accounts including Millwall Football Club.",
+    skills: ["VoIP Solutions", "Account Management", "Client Relations", "Telecommunications"],
+    type: "work",
+    employmentType: "Perm",
+    achievements: [
+      "Managed VoIP solutions for major clients",
+      "Handled account for Millwall Football Club",
+      "Developed client relationships and technical solutions"
+    ]
+  },
+  {
+    id: "15",
+    title: "Work Placement - Graphic Designer",
+    company: "Apptomix",
+    period: "08/2008 - 03/2009",
+    location: "San Diego, California, USA",
+    description: "Graphic and Frontend Designer for content management system development.",
+    skills: ["Graphic Design", "Frontend Design", "Content Management", "Web Design"],
+    type: "work",
+    employmentType: "Work Experience",
+    achievements: [
+      "Designed graphics and frontend components for CMS",
+      "Gained international work experience in San Diego",
+      "Developed foundational design and development skills"
+    ]
   }
 ];
 
@@ -146,6 +292,9 @@ export default function ExperienceTimeline() {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold">{item.title}</h3>
                   <p className="text-foreground/80 font-medium">{item.company}</p>
+                  {item.location && (
+                    <p className="text-foreground/60 text-sm">{item.location}</p>
+                  )}
                   {item.achievements && item.achievements.length > 0 && (
                     <div className="mt-2">
                       <h4 className="text-sm font-medium text-foreground/70 mb-1">Key Achievements:</h4>
