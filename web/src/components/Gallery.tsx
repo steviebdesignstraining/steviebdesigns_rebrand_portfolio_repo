@@ -19,39 +19,39 @@ const galleryItems: GalleryItem[] = [
   // QA Automation Videos
   {
     id: "qa1",
-    title: "Cypress with Cucumber",
-    description: "Demonstrating scalable BDD-style test automation using Cypress and Cucumber.",
-    image: "https://i.vimeocdn.com/video/1969425725-c60324196c79c38a9586a6c40f580efdd7faabe5c1c6b1aeb37ee96a4c86967a-d?mw=1400&mh=910&q=70",
+    title: "Playwright with TypeScript",
+    description: "High-level automated testing showcasing TypeScript integration with Playwright.",
+    image: "https://i.vimeocdn.com/video/1004013752-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/1969425725"
+    videoUrl: "https://vimeo.com/1004013752/63a102ec88"
   },
   {
     id: "qa2",
     title: "WebdriverIO with Appium",
-    description: "Mobile automation testing combining WebdriverIO and Appium.",
-    image: "https://i.vimeocdn.com/video/1969425497-5c6782317d83699b2403c8923e5b2ec4f60c0681f97b4dc8b03f983ae06edfe0-d?mw=1400&mh=876&q=70",
+    description: "Mobile automation testing combining WebdriverIO and Appium for cross-platform testing.",
+    image: "https://i.vimeocdn.com/video/866884683-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/1969425497"
+    videoUrl: "https://vimeo.com/866884683"
   },
   {
     id: "qa3",
-    title: "Playwright with TypeScript",
-    description: "High-level automated testing showcasing TypeScript integration.",
-    image: "https://i.vimeocdn.com/video/1969426205-f0e5ae7e3d03ef9514a8e60539f977905e460e28a8b5dea1fe14e487cf49b9ec-d?mw=1400&mh=910&q=70",
+    title: "Cypress with Cucumber",
+    description: "Demonstrating scalable BDD-style test automation using Cypress and Cucumber.",
+    image: "https://i.vimeocdn.com/video/827256682-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/1969426205"
+    videoUrl: "https://vimeo.com/827256682"
   },
   {
     id: "qa4",
     title: "Pytest with Selenium",
     description: "Demonstrating Python-based test automation using Pytest and Selenium.",
-    image: "https://i.vimeocdn.com/video/1969425252-313ceba3bcac739f7ee6338a4ef92ed74a45d099a6792a0d91332d82766f47a9-d?mw=1400&mh=788&q=70",
+    image: "https://i.vimeocdn.com/video/1045752431-dummy-thumbnail.jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://vimeo.com/1969425252"
+    videoUrl: "https://vimeo.com/1045752431/bbfaac50fb"
   },
   // Design Images
   {

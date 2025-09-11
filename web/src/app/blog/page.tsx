@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import BlogFilters from "@/components/BlogFilters";
+import BlogNavigation from "@/components/BlogNavigation";
 
 type WpPost = {
   id: number;
@@ -102,7 +103,9 @@ export default async function BlogPage({
   ]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-16">
+    <div className="min-h-screen">
+      <BlogNavigation />
+      <div className="max-w-6xl mx-auto px-4 py-16">
       <h1 className="text-3xl sm:text-4xl font-semibold">Blog</h1>
       <p className="mt-2 text-foreground/70">
         {posts.length === 0
@@ -159,6 +162,7 @@ export default async function BlogPage({
                 </article>
               );
             })}
+      </div>
       </div>
     </div>
   );
