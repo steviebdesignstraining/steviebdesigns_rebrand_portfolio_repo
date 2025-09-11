@@ -55,9 +55,9 @@ export default function MobileMenu() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <div className="absolute inset-0 bg-black" onClick={() => setIsOpen(false)} />
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
             <motion.div
-              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-black border-l border-white/10 shadow-xl"
+              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-background border-l border-foreground/10 shadow-xl"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
@@ -72,7 +72,7 @@ export default function MobileMenu() {
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block py-3 px-4 text-white text-lg hover:opacity-80 transition-opacity"
+                        className="block py-3 px-4 text-foreground text-lg hover:opacity-80 transition-opacity"
                         onClick={() => setIsOpen(false)}
                       >
                         {item.label}
@@ -81,7 +81,7 @@ export default function MobileMenu() {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="block py-3 px-4 text-white text-lg hover:opacity-80 transition-opacity"
+                        className="block py-3 px-4 text-foreground text-lg hover:opacity-80 transition-opacity"
                         onClick={() => setIsOpen(false)}
                       >
                         {item.label}
