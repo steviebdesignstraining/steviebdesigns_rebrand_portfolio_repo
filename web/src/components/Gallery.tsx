@@ -21,7 +21,7 @@ const galleryItems: GalleryItem[] = [
     id: "qa1",
     title: "Playwright with TypeScript",
     description: "High-level automated testing showcasing TypeScript integration with Playwright.",
-    image: "/Design1.jpg",
+    image: "/thumb.jpg",
     category: "QA Automation",
     type: "video",
     videoUrl: "https://player.vimeo.com/video/1004013752?h=63a102ec88"
@@ -30,7 +30,7 @@ const galleryItems: GalleryItem[] = [
     id: "qa2",
     title: "WebdriverIO with Appium",
     description: "Mobile automation testing combining WebdriverIO and Appium for cross-platform testing.",
-    image: "/Design2.jpg",
+    image: "/thumb (2).jpg",
     category: "QA Automation",
     type: "video",
     videoUrl: "https://player.vimeo.com/video/866884683?h=cbea33cad5"
@@ -39,7 +39,7 @@ const galleryItems: GalleryItem[] = [
     id: "qa3",
     title: "Cypress with Cucumber",
     description: "Demonstrating scalable BDD-style test automation using Cypress and Cucumber.",
-    image: "/Design3.jpg",
+    image: "/thumb (1).jpg",
     category: "QA Automation",
     type: "video",
     videoUrl: "https://player.vimeo.com/video/827256682?h=30db7b3fc1"
@@ -48,7 +48,7 @@ const galleryItems: GalleryItem[] = [
     id: "qa4",
     title: "Pytest with Selenium",
     description: "Demonstrating Python-based test automation using Pytest and Selenium.",
-    image: "/Design4.jpg",
+    image: "/thumb (3).jpg",
     category: "QA Automation",
     type: "video",
     videoUrl: "https://player.vimeo.com/video/1045752431?h=bbfaac50fb"
