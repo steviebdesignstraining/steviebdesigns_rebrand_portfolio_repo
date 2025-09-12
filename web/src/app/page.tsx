@@ -66,17 +66,32 @@ export default function Home() {
 
         <MotionDiv id="services" className="max-w-6xl mx-auto px-4 py-16 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">Services</h2>
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              "QA Services",
-              "Application Development",
-              "Digital & Web Strategy",
-              "Prompt Engineering",
-              "AI Integration Strategy",
-            ].map((title) => (
-              <div key={title} className="rounded-lg border border-foreground/10 p-5 hover:bg-foreground/[.03] transition">
-                <h3 className="font-medium">{title}</h3>
-                <p className="text-sm text-foreground/70 mt-2">Short description of {title.toLowerCase()}.</p>
+              {
+                title: "QA Services",
+                description: "Comprehensive manual and automated testing to ensure product quality, reliability, and performance. Expertise in test automation frameworks, CI/CD integration, exploratory testing, and shift-left QA strategies to improve efficiency and reduce defects early in the SDLC."
+              },
+              {
+                title: "Application Development",
+                description: "Design and development of scalable, user-focused web and mobile applications. Proficient in modern technologies such as React, TypeScript, and Next.js, with a strong foundation in frontend/UI development and API integrations."
+              },
+              {
+                title: "Digital & Web Strategy",
+                description: "Crafting data-driven digital strategies that align technology, design, and business goals. Experienced in optimizing user journeys, integrating digital assets, and ensuring cross-platform quality for websites and web applications."
+              },
+              {
+                title: "Prompt & Contextual Engineering",
+                description: "Developing effective AI prompts and contextual workflows to enhance automation, testing, and digital applications. Leveraging AI tools to streamline processes, improve testing coverage, and optimize user interactions."
+              },
+              {
+                title: "AI Integration Strategy",
+                description: "Guiding businesses in adopting and integrating AI within existing systems and workflows. Focused on leveraging AI for test automation, predictive analytics, and intelligent process optimization while ensuring scalability and alignment with business objectives."
+              }
+            ].map((service) => (
+              <div key={service.title} className="rounded-lg border border-foreground/10 p-6 hover:bg-foreground/[.03] transition">
+                <h3 className="font-medium text-lg mb-3">{service.title}</h3>
+                <p className="text-sm text-foreground/70 leading-relaxed">{service.description}</p>
               </div>
             ))}
           </div>
