@@ -193,8 +193,8 @@ export default function Gallery() {
               />
               {item.type === "video" && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
-                  <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-foreground ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
                   </div>

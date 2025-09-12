@@ -26,7 +26,6 @@ export default function Home() {
             <Link href="#services" className="hover:opacity-80">Services</Link>
             <Link href="#experience" className="hover:opacity-80">Experience</Link>
             <Link href="#education" className="hover:opacity-80">Education</Link>
-            <a href="/blog" target="_blank" rel="noopener noreferrer" className="hover:opacity-80">Blog</a>
             <Link href="#contact" className="hover:opacity-80">Contact</Link>
             <ThemeToggle />
           </div>
@@ -211,7 +210,6 @@ export default function Home() {
                 <Link href="#services" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Services</Link>
                 <Link href="#experience" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Experience</Link>
                 <Link href="#education" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Education</Link>
-                <Link href="/blog" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Blog</Link>
                 <Link href="#contact" className="block text-sm text-foreground/70 hover:text-foreground transition-colors">Contact</Link>
               </div>
             </div>

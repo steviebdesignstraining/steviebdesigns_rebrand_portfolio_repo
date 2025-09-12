@@ -15,7 +15,6 @@ export default function MobileMenu() {
     { href: "#services", label: "Services" },
     { href: "#experience", label: "Experience" },
     { href: "#education", label: "Education" },
-    { href: "/blog", label: "Blog" },
     { href: "#contact", label: "Contact" },
   ];
 
@@ -66,27 +65,14 @@ export default function MobileMenu() {
               <div className="p-6 flex flex-col justify-center items-center h-full">
                 <nav className="space-y-6 text-center">
                   {menuItems.map((item) => (
-                    item.href === "/blog" ? (
-                      <a
-                        key={item.href}
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="block py-3 px-4 text-foreground text-lg hover:opacity-80 transition-opacity"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.label}
-                      </a>
-                    ) : (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="block py-3 px-4 text-foreground text-lg hover:opacity-80 transition-opacity"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.label}
-                      </Link>
-                    )
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block py-3 px-4 text-foreground text-lg hover:opacity-80 transition-opacity"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
                   ))}
                 </nav>
                 <div className="mt-8">
