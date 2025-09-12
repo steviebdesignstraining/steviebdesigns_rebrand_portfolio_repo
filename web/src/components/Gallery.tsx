@@ -117,31 +117,6 @@ const galleryItems: GalleryItem[] = [
     image: "/Design7.png",
     category: "Designs",
     type: "image"
-  },
-  // Development Placeholders
-  {
-    id: "dev1",
-    title: "Modern Web Application",
-    description: "React-based web application with TypeScript and modern UI components.",
-    image: "/logo/steviebdesigns Main Logo.png",
-    category: "Development",
-    type: "image"
-  },
-  {
-    id: "dev2",
-    title: "Mobile App Development",
-    description: "Cross-platform mobile application with React Native and native integrations.",
-    image: "/logo/steviebdesigns Logo Symbol.png",
-    category: "Development",
-    type: "image"
-  },
-  {
-    id: "dev3",
-    title: "API Development",
-    description: "RESTful API development with Node.js and comprehensive documentation.",
-    image: "/logo/steviebdesigns Black Logo.png",
-    category: "Development",
-    type: "image"
   }
 ];
 
@@ -149,7 +124,7 @@ export default function Gallery() {
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
   const [filter, setFilter] = useState<string>("All");
 
-  const categories = ["All", "Designs", "QA Automation", "Development"];
+  const categories = ["All", "Designs", "QA Automation"];
   const filteredItems = filter === "All" 
     ? galleryItems 
     : galleryItems.filter(item => item.category === filter);
