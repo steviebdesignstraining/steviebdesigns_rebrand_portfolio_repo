@@ -53,12 +53,29 @@ export default function ContactForm() {
     
     setSubmitting(true);
     try {
-      // In a real implementation, this would send to steviebdesigns1@gmail.com
-      await new Promise((r) => setTimeout(r, 600));
-      setSuccess("Thanks! Your message has been sent to steviebdesigns1@gmail.com.");
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: state.name.trim(),
+          email: state.email.trim(),
+          message: state.message.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSuccess("Thanks! Your message has been sent to steviebdesigns1@gmail.com. I'll get back to you soon!");
       setState({ name: "", email: "", message: "", honeypot: "" });
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (error) {
+      console.error('Contact form error:', error);
+      setError(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
     }
