@@ -6,7 +6,7 @@
   "devCommand": "cd web && npm run dev",
   "regions": ["lhr1"],
   "functions": {
-    "src/app/api/**/*.ts": {
+    "web/src/app/api/**/*.ts": {
       "maxDuration": 30
     }
   },
