@@ -1,5 +1,5 @@
 import BlogNavigation from "@/components/BlogNavigation";
-import BlogContent from "@/components/BlogContent";
+import BlogAppContent from "@/components/BlogAppContent";
 
 type WpCategory = {
   id: number;
@@ -76,7 +76,7 @@ export default async function BlogPage() {
           </p>
         </div>
 
-        <BlogContent categories={categories} tags={tags} />
+        <BlogAppContent categories={categories} tags={tags} />
       </main>
     </div>
   );
