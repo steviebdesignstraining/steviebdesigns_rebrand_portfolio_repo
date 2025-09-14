@@ -1,6 +1,4 @@
 import { ImageResponse } from 'next/og'
-import { readFileSync } from 'fs'
-import { join } from 'path'
 
 export const size = {
   width: 32,
@@ -13,26 +11,19 @@ export default function Icon() {
     (
       <div
         style={{
+          fontSize: 20,
+          background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'transparent',
+          color: 'white',
+          fontWeight: 'bold',
+          fontFamily: 'system-ui',
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo/steviebdesigns Logo Symbol.png"
-          alt="Steviebdesigns Logo"
-          width={32}
-          height={32}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'contain',
-          }}
-        />
+        S
       </div>
     ),
     {

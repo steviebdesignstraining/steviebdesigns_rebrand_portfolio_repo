@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import nodemailer from 'nodemailer';
+import { NextRequest, NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!name || !email || !message) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: "All fields are required" },
         { status: 400 }
       );
     }
@@ -17,26 +17,26 @@ export async function POST(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: "Invalid email format" },
         { status: 400 }
       );
     }
 
     // Check for required environment variables
     if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
-      console.error('Missing email configuration:', {
+      console.error("Missing email configuration:", {
         hasGmailUser: !!process.env.GMAIL_USER,
-        hasGmailPassword: !!process.env.GMAIL_APP_PASSWORD
+        hasGmailPassword: !!process.env.GMAIL_APP_PASSWORD,
       });
       return NextResponse.json(
-        { error: 'Email service is not properly configured' },
+        { error: "Email service is not properly configured" },
         { status: 503 }
       );
     }
 
     // Create transporter using Gmail SMTP
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      service: "gmail",
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
@@ -47,9 +47,9 @@ export async function POST(request: NextRequest) {
     try {
       await transporter.verify();
     } catch (verifyError) {
-      console.error('SMTP verification failed:', verifyError);
+      console.error("SMTP verification failed:", verifyError);
       return NextResponse.json(
-        { error: 'Email service configuration error' },
+        { error: "Email service configuration error" },
         { status: 503 }
       );
     }
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     // Email content
     const mailOptions = {
       from: process.env.GMAIL_USER,
-      to: 'steviebdesigns1@gmail.com',
+      to: "steviebdesigns1@gmail.com",
       replyTo: email,
       subject: `Portfolio Contact Form: Message from ${name}`,
       html: `
@@ -105,18 +105,19 @@ export async function POST(request: NextRequest) {
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json(
-      { message: 'Email sent successfully' },
+      { message: "Email sent successfully" },
       { status: 200 }
     );
-
   } catch (error) {
-    console.error('Error sending email:', {
-      message: error instanceof Error ? error.message : 'Unknown error',
+    console.error("Error sending email:", {
+      message: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
-      name: error instanceof Error ? error.name : undefined
+      name: error instanceof Error ? error.name : undefined,
     });
     return NextResponse.json(
-      { error: 'Failed to send email. Please try again or contact me directly.' },
+      {
+        error: "Failed to send email. Please try again or contact me directly.",
+      },
       { status: 500 }
     );
   }
