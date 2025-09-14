@@ -28,5 +28,3 @@ jobs:
           event-name: health_check_failed
           measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
           api-secret: ${{ secrets.GA4_API_SECRET }}
-          client-id: ${{ github.run_id }}
-          params: '{"url":"${{ secrets.SITE_URL }}","status":"${{ steps.curl.outputs.status }}"}'
