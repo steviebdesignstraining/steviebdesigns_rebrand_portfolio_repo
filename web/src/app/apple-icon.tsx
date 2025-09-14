@@ -11,19 +11,28 @@ export default function AppleIcon() {
     (
       <div
         style={{
-          fontSize: 64,
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           width: '100%',
           height: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: 'white',
-          fontWeight: 'bold',
+          background: 'transparent',
           borderRadius: 40,
         }}
       >
-        SB
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo/steviebdesigns Logo Symbol.png"
+          alt="Steviebdesigns Logo"
+          width={180}
+          height={180}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            borderRadius: 40,
+          }}
+        />
       </div>
     ),
     {
