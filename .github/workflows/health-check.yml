@@ -1,0 +1,32 @@
+name: Website Health Check
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check site availability
+        id: curl
+        run: |
+          URL="${{ secrets.SITE_URL }}"
+          if [ -z "$URL" ]; then
+            echo "SITE_URL secret not set" >&2
+            exit 1
+          fi
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$URL")
+          echo "status=$HTTP_STATUS" >> $GITHUB_OUTPUT
+          test "$HTTP_STATUS" -ge 200 -a "$HTTP_STATUS" -lt 400
+
+      - name: Report failure to GA4
+        if: ${{ failure() }}
+        uses: Dylan700/ga4-action@v1.4.1
+        with:
+          event-name: health_check_failed
+          measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
+          api-secret: ${{ secrets.GA4_API_SECRET }}
+          client-id: ${{ github.run_id }}
+          params: '{"url":"${{ secrets.SITE_URL }}","status":"${{ steps.curl.outputs.status }}"}'
