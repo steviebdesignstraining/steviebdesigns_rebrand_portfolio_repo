@@ -1,0 +1,491 @@
+name: Accessibility Audit
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 8 * * *'  # Daily at 8 AM
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to audit (leave empty to use SITE_URL secret)'
+        required: false
+        type: string
+      standard:
+        description: 'Accessibility standard to test against'
+        required: false
+        default: 'WCAG2AA'
+        type: choice
+        options:
+          - WCAG2A
+          - WCAG2AA
+          - WCAG2AAA
+
+jobs:
+  pa11y-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install -g pa11y pa11y-ci pa11y-reporter-html pa11y-reporter-json
+          # Install Chromium dependencies
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser xvfb
+
+      - name: Set audit URL
+        id: set-url
+        run: |
+          if [ -n "${{ inputs.url }}" ]; then
+            echo "AUDIT_URL=${{ inputs.url }}" >> $GITHUB_OUTPUT
+          elif [ -n "${{ secrets.SITE_URL }}" ]; then
+            echo "AUDIT_URL=${{ secrets.SITE_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "No URL provided" >&2
+            exit 1
+          fi
+
+      - name: Create Pa11y configuration
+        run: |
+          cat > .pa11yci << 'EOF'
+          {
+            "defaults": {
+              "chromeLaunchConfig": {
+                "executablePath": "/usr/bin/chromium-browser",
+                "args": [
+                  "--no-sandbox",
+                  "--disable-dev-shm-usage",
+                  "--disable-web-security"
+                ]
+              },
+              "standard": "${{ inputs.standard || 'WCAG2AA' }}",
+              "timeout": 30000,
+              "wait": 2000,
+              "reporters": ["cli", "json", "html"],
+              "includeNotices": true,
+              "includeWarnings": true,
+              "ignore": [
+                "WCAG2AA.Principle1.Guideline1_4.1_4_3.G18.Fail"
+              ]
+            },
+            "urls": [
+              "${{ steps.set-url.outputs.AUDIT_URL }}",
+              "${{ steps.set-url.outputs.AUDIT_URL }}/blog"
+            ]
+          }
+          EOF
+
+      - name: Run Pa11y accessibility audit
+        run: |
+          mkdir -p accessibility-reports
+          xvfb-run -a pa11y-ci \
+            --config .pa11yci \
+            --reporter cli \
+            --reporter json > accessibility-reports/pa11y-results.json \
+            --reporter html > accessibility-reports/pa11y-report.html
+        continue-on-error: true
+
+      - name: Process Pa11y results
+        id: process-results
+        run: |
+          cat > process-results.js << 'EOF'
+          const fs = require('fs');
+          
+          let results = {};
+          try {
+            if (fs.existsSync('accessibility-reports/pa11y-results.json')) {
+              const rawData = fs.readFileSync('accessibility-reports/pa11y-results.json', 'utf8');
+              results = JSON.parse(rawData);
+            }
+          } catch (error) {
+            console.error('Failed to parse Pa11y results:', error.message);
+            results = { error: 'Failed to parse results' };
+          }
+
+          const summary = {
+            timestamp: new Date().toISOString(),
+            total_issues: 0,
+            errors: 0,
+            warnings: 0,
+            notices: 0,
+            urls_tested: 0,
+            urls: {}
+          };
+
+          if (Array.isArray(results)) {
+            results.forEach(urlResult => {
+              summary.urls_tested++;
+              const url = urlResult.pageUrl || 'unknown';
+              const issues = urlResult.issues || [];
+              
+              summary.urls[url] = {
+                total: issues.length,
+                errors: issues.filter(i => i.type === 'error').length,
+                warnings: issues.filter(i => i.type === 'warning').length,
+                notices: issues.filter(i => i.type === 'notice').length,
+                issues: issues.map(issue => ({
+                  type: issue.type,
+                  code: issue.code,
+                  message: issue.message,
+                  context: issue.context,
+                  selector: issue.selector
+                }))
+              };
+
+              summary.total_issues += issues.length;
+              summary.errors += summary.urls[url].errors;
+              summary.warnings += summary.urls[url].warnings;
+              summary.notices += summary.urls[url].notices;
+            });
+          }
+
+          fs.writeFileSync('accessibility-reports/summary.json', JSON.stringify(summary, null, 2));
+
+          console.log('\n📊 Accessibility Audit Summary:');
+          console.log(`URLs tested: ${summary.urls_tested}`);
+          console.log(`Total issues: ${summary.total_issues}`);
+          console.log(`Errors: ${summary.errors}`);
+          console.log(`Warnings: ${summary.warnings}`);
+          console.log(`Notices: ${summary.notices}`);
+
+          // Set output for other steps
+          console.log(`::set-output name=total_issues::${summary.total_issues}`);
+          console.log(`::set-output name=errors::${summary.errors}`);
+          console.log(`::set-output name=has_errors::${summary.errors > 0}`);
+          
+          // Exit with error if there are accessibility errors
+          if (summary.errors > 0) {
+            console.error(`\n❌ Accessibility audit failed with ${summary.errors} errors`);
+            process.exit(1);
+          }
+          EOF
+
+          node process-results.js
+
+      - name: Upload accessibility reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-audit-${{ github.run_id }}
+          path: accessibility-reports/
+
+      - name: Comment on PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            if (!fs.existsSync('accessibility-reports/summary.json')) {
+              console.log('No accessibility summary found');
+              return;
+            }
+
+            const summary = JSON.parse(fs.readFileSync('accessibility-reports/summary.json', 'utf8'));
+            
+            let comment = `## ♿ Accessibility Audit Results\n\n`;
+            comment += `**Standard:** ${{ inputs.standard || 'WCAG2AA' }}\n`;
+            comment += `**URLs Tested:** ${summary.urls_tested}\n`;
+            comment += `**Total Issues:** ${summary.total_issues}\n\n`;
+
+            if (summary.total_issues > 0) {
+              comment += `| Type | Count |\n|------|-------|\n`;
+              comment += `| ❌ Errors | ${summary.errors} |\n`;
+              comment += `| ⚠️ Warnings | ${summary.warnings} |\n`;
+              comment += `| ℹ️ Notices | ${summary.notices} |\n\n`;
+
+              Object.entries(summary.urls).forEach(([url, data]) => {
+                if (data.total > 0) {
+                  comment += `### ${url}\n`;
+                  comment += `**Issues:** ${data.total} (${data.errors} errors, ${data.warnings} warnings, ${data.notices} notices)\n\n`;
+                  
+                  if (data.errors > 0) {
+                    comment += `**Errors:**\n`;
+                    data.issues.filter(i => i.type === 'error').slice(0, 5).forEach(issue => {
+                      comment += `- **${issue.code}**: ${issue.message}\n`;
+                      if (issue.selector) comment += `  - Element: \`${issue.selector}\`\n`;
+                    });
+                    if (data.issues.filter(i => i.type === 'error').length > 5) {
+                      comment += `- ... and ${data.issues.filter(i => i.type === 'error').length - 5} more errors\n`;
+                    }
+                    comment += `\n`;
+                  }
+                }
+              });
+
+              comment += `📋 **Full Report:** Check the uploaded artifacts for detailed HTML and JSON reports.\n`;
+            } else {
+              comment += `✅ **No accessibility issues found!** Great job maintaining an accessible website.\n`;
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Report to GA4 if issues found
+        if: steps.process-results.outputs.has_errors == 'true'
+        uses: Dylan700/ga4-action@v1.4.1
+        with:
+          event-name: accessibility_audit_failed
+          measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
+          api-secret: ${{ secrets.GA4_API_SECRET }}
+
+      - name: Create issue on critical accessibility failures
+        if: failure() && github.event_name == 'schedule' && steps.process-results.outputs.errors > 5
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let summary = {};
+            
+            try {
+              summary = JSON.parse(fs.readFileSync('accessibility-reports/summary.json', 'utf8'));
+            } catch (e) {
+              summary = { error: 'Failed to read accessibility results' };
+            }
+
+            const title = `🚨 Critical Accessibility Issues Detected - ${summary.errors || 'Unknown'} Errors`;
+            const body = `
+            ## Critical Accessibility Audit Failure
+            
+            **Standard:** ${{ inputs.standard || 'WCAG2AA' }}
+            **Total Issues:** ${summary.total_issues || 'Unknown'}
+            **Errors:** ${summary.errors || 'Unknown'}
+            **URLs Tested:** ${summary.urls_tested || 'Unknown'}
+            
+            ### Summary
+            This automated accessibility audit found critical issues that need immediate attention to ensure compliance with accessibility standards.
+            
+            ### Next Steps
+            1. Review the uploaded accessibility reports
+            2. Fix critical accessibility errors
+            3. Test with screen readers and keyboard navigation
+            4. Re-run the accessibility audit
+            
+            ### Detailed Results
+            \`\`\`json
+            ${JSON.stringify(summary, null, 2)}
+            \`\`\`
+            
+            _This issue was automatically created by the Accessibility Audit workflow._
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['accessibility', 'bug', 'high-priority', 'automated']
+            });
+
+  axe-core-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install puppeteer @axe-core/puppeteer axe-core
+          # Install Chromium dependencies
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser xvfb
+
+      - name: Set audit URL
+        id: set-url
+        run: |
+          if [ -n "${{ inputs.url }}" ]; then
+            echo "AUDIT_URL=${{ inputs.url }}" >> $GITHUB_OUTPUT
+          elif [ -n "${{ secrets.SITE_URL }}" ]; then
+            echo "AUDIT_URL=${{ secrets.SITE_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "No URL provided" >&2
+            exit 1
+          fi
+
+      - name: Create axe-core audit script
+        run: |
+          cat > axe-audit.js << 'EOF'
+          const puppeteer = require('puppeteer');
+          const { AxePuppeteer } = require('@axe-core/puppeteer');
+          const fs = require('fs');
+
+          const url = process.env.AUDIT_URL;
+          const pages = ['/', '/blog'];
+
+          async function runAxeAudit() {
+            const browser = await puppeteer.launch({
+              headless: 'new',
+              executablePath: '/usr/bin/chromium-browser',
+              args: ['--no-sandbox', '--disable-dev-shm-usage']
+            });
+
+            const results = {
+              timestamp: new Date().toISOString(),
+              baseUrl: url,
+              pages: {},
+              summary: {
+                total_violations: 0,
+                total_passes: 0,
+                total_incomplete: 0,
+                total_inapplicable: 0
+              }
+            };
+
+            for (const pagePath of pages) {
+              const fullUrl = `${url}${pagePath}`;
+              console.log(`🔍 Auditing: ${fullUrl}`);
+
+              try {
+                const page = await browser.newPage();
+                await page.goto(fullUrl, { waitUntil: 'networkidle0' });
+                
+                const axeResults = await new AxePuppeteer(page).analyze();
+                
+                results.pages[pagePath] = {
+                  url: fullUrl,
+                  violations: axeResults.violations.map(v => ({
+                    id: v.id,
+                    impact: v.impact,
+                    description: v.description,
+                    help: v.help,
+                    helpUrl: v.helpUrl,
+                    tags: v.tags,
+                    nodes: v.nodes.map(n => ({
+                      target: n.target,
+                      html: n.html,
+                      impact: n.impact,
+                      failureSummary: n.failureSummary
+                    }))
+                  })),
+                  passes: axeResults.passes.length,
+                  incomplete: axeResults.incomplete.length,
+                  inapplicable: axeResults.inapplicable.length
+                };
+
+                results.summary.total_violations += axeResults.violations.length;
+                results.summary.total_passes += axeResults.passes.length;
+                results.summary.total_incomplete += axeResults.incomplete.length;
+                results.summary.total_inapplicable += axeResults.inapplicable.length;
+
+                console.log(`✅ ${pagePath}: ${axeResults.violations.length} violations, ${axeResults.passes.length} passes`);
+                
+                await page.close();
+              } catch (error) {
+                console.error(`❌ Error auditing ${pagePath}:`, error.message);
+                results.pages[pagePath] = { error: error.message };
+              }
+            }
+
+            await browser.close();
+
+            // Save results
+            fs.mkdirSync('axe-reports', { recursive: true });
+            fs.writeFileSync('axe-reports/axe-results.json', JSON.stringify(results, null, 2));
+
+            // Generate summary report
+            let htmlReport = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title>Axe-Core Accessibility Audit Report</title>
+              <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                .violation { background: #ffebee; padding: 10px; margin: 10px 0; border-left: 4px solid #f44336; }
+                .summary { background: #e3f2fd; padding: 15px; margin: 20px 0; }
+                .page-section { margin: 20px 0; }
+                code { background: #f5f5f5; padding: 2px 4px; }
+              </style>
+            </head>
+            <body>
+              <h1>🔍 Axe-Core Accessibility Audit Report</h1>
+              <div class="summary">
+                <h2>Summary</h2>
+                <p><strong>Total Violations:</strong> ${results.summary.total_violations}</p>
+                <p><strong>Total Passes:</strong> ${results.summary.total_passes}</p>
+                <p><strong>Incomplete:</strong> ${results.summary.total_incomplete}</p>
+                <p><strong>Timestamp:</strong> ${results.timestamp}</p>
+              </div>
+            `;
+
+            Object.entries(results.pages).forEach(([path, data]) => {
+              if (data.error) {
+                htmlReport += `<div class="page-section"><h2>❌ ${path}</h2><p>Error: ${data.error}</p></div>`;
+                return;
+              }
+
+              htmlReport += `<div class="page-section"><h2>📄 ${path}</h2>`;
+              htmlReport += `<p><strong>URL:</strong> ${data.url}</p>`;
+              htmlReport += `<p><strong>Violations:</strong> ${data.violations.length}, <strong>Passes:</strong> ${data.passes}</p>`;
+
+              if (data.violations.length > 0) {
+                data.violations.forEach(violation => {
+                  htmlReport += `
+                  <div class="violation">
+                    <h3>${violation.id} (${violation.impact})</h3>
+                    <p><strong>Description:</strong> ${violation.description}</p>
+                    <p><strong>Help:</strong> <a href="${violation.helpUrl}" target="_blank">${violation.help}</a></p>
+                    <p><strong>Tags:</strong> ${violation.tags.join(', ')}</p>
+                    <h4>Affected Elements:</h4>
+                    ${violation.nodes.map(node => `
+                      <div style="margin: 5px 0;">
+                        <code>${node.target.join(', ')}</code><br>
+                        <small>${node.html}</small>
+                      </div>
+                    `).join('')}
+                  </div>
+                  `;
+                });
+              }
+
+              htmlReport += '</div>';
+            });
+
+            htmlReport += '</body></html>';
+            fs.writeFileSync('axe-reports/axe-report.html', htmlReport);
+
+            console.log('\n📊 Axe-Core Audit Summary:');
+            console.log(`Total violations: ${results.summary.total_violations}`);
+            console.log(`Total passes: ${results.summary.total_passes}`);
+
+            // Exit with error if violations found
+            if (results.summary.total_violations > 0) {
+              process.exit(1);
+            }
+          }
+
+          runAxeAudit().catch(console.error);
+          EOF
+
+      - name: Run axe-core audit
+        env:
+          AUDIT_URL: ${{ steps.set-url.outputs.AUDIT_URL }}
+        run: |
+          xvfb-run -a node axe-audit.js
+        continue-on-error: true
+
+      - name: Upload axe-core reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axe-core-audit-${{ github.run_id }}
+          path: axe-reports/

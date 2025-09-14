@@ -95,8 +95,18 @@ export default function ContactForm() {
         <label className="text-sm" htmlFor="message">Message</label>
         <textarea id="message" className="rounded-md border border-foreground/20 px-3 py-2 bg-background" placeholder="How can I help?" rows={5} value={state.message} onChange={(e) => setState((s) => ({ ...s, message: e.target.value }))} required />
       </div>
-      {/* Honeypot field */}
-      <input className="hidden" tabIndex={-1} autoComplete="off" value={state.honeypot} onChange={(e) => setState((s) => ({ ...s, honeypot: e.target.value }))} aria-hidden="true" />
+      {/* Honeypot field - hidden from users and screen readers */}
+      <input 
+        className="hidden" 
+        tabIndex={-1} 
+        autoComplete="off" 
+        value={state.honeypot} 
+        onChange={(e) => setState((s) => ({ ...s, honeypot: e.target.value }))} 
+        aria-hidden="true"
+        aria-label="Leave this field empty"
+        name="honeypot"
+        style={{ display: 'none' }}
+      />
 
       <div className="flex items-center gap-3">
         <button type="submit" className="px-5 py-2 rounded-md bg-foreground text-background w-fit disabled:opacity-50" disabled={disabled}>
