@@ -75,6 +75,12 @@ These should be set in Vercel dashboard, not GitHub secrets:
 - **Features**: Navigation testing, form validation, responsive design, performance, accessibility
 - **Status**: ✅ Configured
 
+### 9. Accessibility Audit (`accessibility-audit.yml`)
+- **Trigger**: Push to main, Pull requests, Daily at 8 AM, Manual dispatch
+- **Purpose**: Comprehensive accessibility testing with Pa11y and axe-core
+- **Features**: WCAG compliance testing, detailed violation reporting, multi-page auditing
+- **Status**: ✅ Configured
+
 ## Manual Workflow Triggers
 
 You can manually trigger these workflows from the GitHub Actions tab:
@@ -84,6 +90,7 @@ You can manually trigger these workflows from the GitHub Actions tab:
 - Chromium Website Monitor (with test type selection)
 - Visual Regression Testing (with baseline update option)
 - End-to-End Testing
+- Accessibility Audit (with WCAG standard selection and custom URL)
 
 ## GA4 Integration Details
 
