@@ -8,9 +8,8 @@ export default function BlogNavigation() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur bg-background/80 border-b border-black/5 dark:border-white/10">
       <nav className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <Image src="/logo/steviebdesigns Logo Symbol.png" alt="Steviebdesigns" width={36} height={36} />
-          <span className="font-semibold tracking-tight">Steviebdesigns</span>
+        <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+          <Image src="/logo/steviebdesigns Without Slogan.png" alt="Steviebdesigns" width={140} height={36} className="h-9 w-auto" />
         </Link>
         
         <div className="hidden md:flex items-center gap-6 text-sm">
