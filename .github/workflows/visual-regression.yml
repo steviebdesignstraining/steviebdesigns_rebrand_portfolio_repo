@@ -1,0 +1,270 @@
+name: Visual Regression Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      baseline_update:
+        description: 'Update baseline screenshots'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  visual-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for baseline comparison
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install puppeteer pixelmatch pngjs
+          # Install Chromium dependencies
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser xvfb
+
+      - name: Create visual regression script
+        run: |
+          cat > visual-regression.js << 'EOF'
+          const puppeteer = require('puppeteer');
+          const fs = require('fs');
+          const path = require('path');
+          const PNG = require('pngjs').PNG;
+          const pixelmatch = require('pixelmatch');
+
+          const url = process.env.SITE_URL || 'https://steviebdesigns.co.uk';
+          const updateBaseline = process.env.UPDATE_BASELINE === 'true';
+
+          const pages = [
+            { name: 'home', path: '/' },
+            { name: 'blog', path: '/blog' }
+          ];
+
+          const viewports = [
+            { name: 'desktop', width: 1920, height: 1080 },
+            { name: 'tablet', width: 768, height: 1024 },
+            { name: 'mobile', width: 375, height: 667 }
+          ];
+
+          async function takeScreenshots() {
+            const browser = await puppeteer.launch({
+              headless: 'new',
+              executablePath: '/usr/bin/chromium-browser',
+              args: [
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-web-security'
+              ]
+            });
+
+            const results = {
+              timestamp: new Date().toISOString(),
+              comparisons: [],
+              summary: { total: 0, passed: 0, failed: 0, new: 0 }
+            };
+
+            // Create directories
+            fs.mkdirSync('screenshots/current', { recursive: true });
+            fs.mkdirSync('screenshots/baseline', { recursive: true });
+            fs.mkdirSync('screenshots/diff', { recursive: true });
+
+            for (const page of pages) {
+              for (const viewport of viewports) {
+                const screenshotName = `${page.name}-${viewport.name}`;
+                const currentPath = `screenshots/current/${screenshotName}.png`;
+                const baselinePath = `screenshots/baseline/${screenshotName}.png`;
+                const diffPath = `screenshots/diff/${screenshotName}.png`;
+
+                console.log(`📸 Taking screenshot: ${screenshotName}`);
+
+                try {
+                  const browserPage = await browser.newPage();
+                  await browserPage.setViewport(viewport);
+                  
+                  // Navigate and wait for content
+                  await browserPage.goto(`${url}${page.path}`, {
+                    waitUntil: 'networkidle0',
+                    timeout: 30000
+                  });
+
+                  // Wait for any animations to complete
+                  await browserPage.waitForTimeout(2000);
+
+                  // Hide dynamic elements that change frequently
+                  await browserPage.evaluate(() => {
+                    // Hide elements with current time/date
+                    const timeElements = document.querySelectorAll('[data-testid="current-time"], .timestamp, .date-now');
+                    timeElements.forEach(el => el.style.visibility = 'hidden');
+                    
+                    // Hide any loading spinners or dynamic content
+                    const loadingElements = document.querySelectorAll('.loading, .spinner, [data-loading="true"]');
+                    loadingElements.forEach(el => el.style.display = 'none');
+                  });
+
+                  await browserPage.screenshot({ 
+                    path: currentPath,
+                    fullPage: true
+                  });
+
+                  await browserPage.close();
+
+                  // Compare with baseline if it exists
+                  if (fs.existsSync(baselinePath) && !updateBaseline) {
+                    const baseline = PNG.sync.read(fs.readFileSync(baselinePath));
+                    const current = PNG.sync.read(fs.readFileSync(currentPath));
+                    
+                    const { width, height } = baseline;
+                    const diff = new PNG({ width, height });
+                    
+                    const numDiffPixels = pixelmatch(
+                      baseline.data, 
+                      current.data, 
+                      diff.data, 
+                      width, 
+                      height, 
+                      { threshold: 0.2 }
+                    );
+
+                    const diffPercentage = (numDiffPixels / (width * height)) * 100;
+                    
+                    if (numDiffPixels > 0) {
+                      fs.writeFileSync(diffPath, PNG.sync.write(diff));
+                    }
+
+                    const comparison = {
+                      name: screenshotName,
+                      page: page.name,
+                      viewport: viewport.name,
+                      diffPixels: numDiffPixels,
+                      diffPercentage: diffPercentage.toFixed(2),
+                      status: diffPercentage > 1 ? 'FAILED' : 'PASSED',
+                      hasDiff: numDiffPixels > 0
+                    };
+
+                    results.comparisons.push(comparison);
+                    results.summary.total++;
+                    
+                    if (comparison.status === 'PASSED') {
+                      results.summary.passed++;
+                      console.log(`✅ ${screenshotName}: PASSED (${comparison.diffPercentage}% diff)`);
+                    } else {
+                      results.summary.failed++;
+                      console.log(`❌ ${screenshotName}: FAILED (${comparison.diffPercentage}% diff)`);
+                    }
+
+                  } else {
+                    // No baseline exists or updating baseline
+                    if (updateBaseline || !fs.existsSync(baselinePath)) {
+                      fs.copyFileSync(currentPath, baselinePath);
+                      console.log(`📋 ${screenshotName}: Baseline ${updateBaseline ? 'updated' : 'created'}`);
+                      results.summary.new++;
+                    }
+                  }
+
+                } catch (error) {
+                  console.error(`❌ Error taking screenshot ${screenshotName}:`, error.message);
+                  results.comparisons.push({
+                    name: screenshotName,
+                    status: 'ERROR',
+                    error: error.message
+                  });
+                  results.summary.failed++;
+                }
+              }
+            }
+
+            await browser.close();
+
+            // Save results
+            fs.writeFileSync('visual-regression-results.json', JSON.stringify(results, null, 2));
+
+            // Output summary
+            console.log('\n📊 Visual Regression Summary:');
+            console.log(`Total: ${results.summary.total}`);
+            console.log(`Passed: ${results.summary.passed}`);
+            console.log(`Failed: ${results.summary.failed}`);
+            console.log(`New: ${results.summary.new}`);
+
+            // Exit with error if any tests failed
+            if (results.summary.failed > 0) {
+              process.exit(1);
+            }
+          }
+
+          takeScreenshots().catch(console.error);
+          EOF
+
+      - name: Run visual regression tests
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+          UPDATE_BASELINE: ${{ inputs.baseline_update }}
+        run: |
+          xvfb-run -a node visual-regression.js
+
+      - name: Upload screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-regression-${{ github.run_id }}
+          path: |
+            screenshots/
+            visual-regression-results.json
+
+      - name: Comment on PR with results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            if (!fs.existsSync('visual-regression-results.json')) {
+              console.log('No results file found');
+              return;
+            }
+
+            const results = JSON.parse(fs.readFileSync('visual-regression-results.json', 'utf8'));
+            
+            let comment = `## 📸 Visual Regression Test Results\n\n`;
+            comment += `**Summary:** ${results.summary.passed} passed, ${results.summary.failed} failed, ${results.summary.new} new\n\n`;
+
+            if (results.comparisons.length > 0) {
+              comment += `| Page | Viewport | Status | Diff % |\n`;
+              comment += `|------|----------|--------|--------|\n`;
+              
+              results.comparisons.forEach(comp => {
+                const status = comp.status === 'PASSED' ? '✅' : comp.status === 'FAILED' ? '❌' : '⚠️';
+                comment += `| ${comp.page} | ${comp.viewport} | ${status} ${comp.status} | ${comp.diffPercentage || 'N/A'}% |\n`;
+              });
+            }
+
+            if (results.summary.failed > 0) {
+              comment += `\n⚠️ **Visual differences detected!** Check the uploaded artifacts for diff images.\n`;
+            }
+
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Report to GA4 if regressions found
+        if: failure()
+        uses: Dylan700/ga4-action@v1.4.1
+        with:
+          event-name: visual_regression_failed
+          measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
+          api-secret: ${{ secrets.GA4_API_SECRET }}

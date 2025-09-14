@@ -1,0 +1,268 @@
+name: Chromium Website Monitor
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Every 4 hours
+  workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to monitor (leave empty to use SITE_URL secret)'
+        required: false
+        type: string
+      test_type:
+        description: 'Type of monitoring test'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - accessibility
+          - performance
+          - content
+          - functionality
+
+jobs:
+  chromium-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+          # Install Chromium dependencies
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser xvfb
+
+      - name: Set monitoring URL
+        id: set-url
+        run: |
+          if [ -n "${{ inputs.url }}" ]; then
+            echo "MONITOR_URL=${{ inputs.url }}" >> $GITHUB_OUTPUT
+          elif [ -n "${{ secrets.SITE_URL }}" ]; then
+            echo "MONITOR_URL=${{ secrets.SITE_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "No URL provided" >&2
+            exit 1
+          fi
+
+      - name: Create monitoring script
+        run: |
+          cat > monitor.js << 'EOF'
+          const puppeteer = require('puppeteer-extra');
+          const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+          const fs = require('fs');
+
+          puppeteer.use(StealthPlugin());
+
+          const url = process.env.MONITOR_URL;
+          const testType = process.env.TEST_TYPE || 'all';
+
+          async function runMonitoring() {
+            const browser = await puppeteer.launch({
+              headless: 'new',
+              executablePath: '/usr/bin/chromium-browser',
+              args: [
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-web-security',
+                '--disable-features=VizDisplayCompositor'
+              ]
+            });
+
+            const page = await browser.newPage();
+            await page.setViewport({ width: 1920, height: 1080 });
+
+            const results = {
+              url,
+              timestamp: new Date().toISOString(),
+              tests: {}
+            };
+
+            try {
+              console.log(`🔍 Monitoring ${url}...`);
+              
+              // Basic connectivity test
+              const response = await page.goto(url, { 
+                waitUntil: 'networkidle0',
+                timeout: 30000 
+              });
+              
+              results.tests.connectivity = {
+                status: response.status(),
+                loadTime: Date.now()
+              };
+
+              if (testType === 'all' || testType === 'content') {
+                // Content verification
+                const title = await page.title();
+                const hasContent = await page.evaluate(() => {
+                  return document.body.innerText.length > 100;
+                });
+                
+                results.tests.content = {
+                  title,
+                  hasContent,
+                  titleLength: title.length
+                };
+                
+                console.log(`📄 Page title: ${title}`);
+              }
+
+              if (testType === 'all' || testType === 'functionality') {
+                // Test contact form presence
+                const hasContactForm = await page.$('form') !== null;
+                const hasNavigation = await page.$('nav') !== null;
+                
+                results.tests.functionality = {
+                  hasContactForm,
+                  hasNavigation
+                };
+                
+                console.log(`🔧 Contact form present: ${hasContactForm}`);
+              }
+
+              if (testType === 'all' || testType === 'performance') {
+                // Performance metrics
+                const performanceMetrics = await page.evaluate(() => {
+                  const navigation = performance.getEntriesByType('navigation')[0];
+                  return {
+                    loadTime: navigation.loadEventEnd - navigation.fetchStart,
+                    domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
+                    firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || 0
+                  };
+                });
+                
+                results.tests.performance = performanceMetrics;
+                console.log(`⚡ Load time: ${performanceMetrics.loadTime}ms`);
+              }
+
+              if (testType === 'all' || testType === 'accessibility') {
+                // Basic accessibility checks
+                const accessibilityIssues = await page.evaluate(() => {
+                  const issues = [];
+                  
+                  // Check for alt text on images
+                  const imagesWithoutAlt = document.querySelectorAll('img:not([alt])').length;
+                  if (imagesWithoutAlt > 0) issues.push(`${imagesWithoutAlt} images without alt text`);
+                  
+                  // Check for heading structure
+                  const h1Count = document.querySelectorAll('h1').length;
+                  if (h1Count === 0) issues.push('No H1 heading found');
+                  if (h1Count > 1) issues.push('Multiple H1 headings found');
+                  
+                  return issues;
+                });
+                
+                results.tests.accessibility = {
+                  issues: accessibilityIssues,
+                  score: accessibilityIssues.length === 0 ? 'PASS' : 'FAIL'
+                };
+              }
+
+              // Take screenshot
+              await page.screenshot({ 
+                path: 'website-screenshot.png', 
+                fullPage: true 
+              });
+              
+              results.screenshot = 'website-screenshot.png';
+
+            } catch (error) {
+              results.error = {
+                message: error.message,
+                stack: error.stack
+              };
+              console.error('❌ Monitoring failed:', error.message);
+            } finally {
+              await browser.close();
+            }
+
+            // Save results
+            fs.writeFileSync('monitoring-results.json', JSON.stringify(results, null, 2));
+            
+            // Output summary
+            console.log('\n📊 Monitoring Summary:');
+            console.log(JSON.stringify(results, null, 2));
+            
+            // Fail if critical issues found
+            if (results.error || (results.tests.connectivity && results.tests.connectivity.status >= 400)) {
+              process.exit(1);
+            }
+          }
+
+          runMonitoring().catch(console.error);
+          EOF
+
+      - name: Run Chromium monitoring
+        env:
+          MONITOR_URL: ${{ steps.set-url.outputs.MONITOR_URL }}
+          TEST_TYPE: ${{ inputs.test_type || 'all' }}
+        run: |
+          xvfb-run -a node monitor.js
+
+      - name: Upload monitoring results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-results-${{ github.run_id }}
+          path: |
+            monitoring-results.json
+            website-screenshot.png
+
+      - name: Report issues to GA4
+        if: failure()
+        uses: Dylan700/ga4-action@v1.4.1
+        with:
+          event-name: chromium_monitor_failed
+          measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
+          api-secret: ${{ secrets.GA4_API_SECRET }}
+
+      - name: Create issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let results = {};
+            
+            try {
+              results = JSON.parse(fs.readFileSync('monitoring-results.json', 'utf8'));
+            } catch (e) {
+              results = { error: 'Failed to read monitoring results' };
+            }
+
+            const title = `🚨 Website Monitoring Alert - ${new Date().toISOString()}`;
+            const body = `
+            ## Website Monitoring Failed
+            
+            **URL:** ${results.url || 'Unknown'}
+            **Timestamp:** ${results.timestamp || new Date().toISOString()}
+            
+            ### Test Results
+            \`\`\`json
+            ${JSON.stringify(results, null, 2)}
+            \`\`\`
+            
+            ### Next Steps
+            1. Check the uploaded artifacts for screenshots and detailed results
+            2. Verify the website is accessible manually
+            3. Check server logs for any issues
+            
+            _This issue was automatically created by the Chromium Website Monitor workflow._
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'monitoring', 'automated']
+            });

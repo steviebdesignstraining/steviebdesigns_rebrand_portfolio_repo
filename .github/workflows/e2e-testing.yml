@@ -1,0 +1,409 @@
+name: End-to-End Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * *'  # Daily at 6 AM
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install puppeteer puppeteer-extra puppeteer-extra-plugin-stealth
+          # Install Chromium dependencies
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser xvfb
+
+      - name: Create E2E test script
+        run: |
+          cat > e2e-tests.js << 'EOF'
+          const puppeteer = require('puppeteer-extra');
+          const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+
+          puppeteer.use(StealthPlugin());
+
+          const url = process.env.SITE_URL || 'https://steviebdesigns.co.uk';
+
+          class E2ETestSuite {
+            constructor() {
+              this.browser = null;
+              this.page = null;
+              this.results = {
+                timestamp: new Date().toISOString(),
+                tests: [],
+                summary: { total: 0, passed: 0, failed: 0 }
+              };
+            }
+
+            async setup() {
+              this.browser = await puppeteer.launch({
+                headless: 'new',
+                executablePath: '/usr/bin/chromium-browser',
+                args: [
+                  '--no-sandbox',
+                  '--disable-dev-shm-usage',
+                  '--disable-web-security',
+                  '--disable-features=VizDisplayCompositor'
+                ]
+              });
+
+              this.page = await this.browser.newPage();
+              await this.page.setViewport({ width: 1920, height: 1080 });
+              
+              // Set up request/response monitoring
+              this.page.on('response', response => {
+                if (response.status() >= 400) {
+                  console.warn(`⚠️  HTTP ${response.status()}: ${response.url()}`);
+                }
+              });
+
+              this.page.on('pageerror', error => {
+                console.error('📄 Page Error:', error.message);
+              });
+
+              this.page.on('console', msg => {
+                if (msg.type() === 'error') {
+                  console.error('🔴 Console Error:', msg.text());
+                }
+              });
+            }
+
+            async runTest(name, testFn) {
+              console.log(`🧪 Running test: ${name}`);
+              const startTime = Date.now();
+              
+              try {
+                await testFn();
+                const duration = Date.now() - startTime;
+                
+                this.results.tests.push({
+                  name,
+                  status: 'PASSED',
+                  duration,
+                  timestamp: new Date().toISOString()
+                });
+                
+                this.results.summary.passed++;
+                console.log(`✅ ${name} - PASSED (${duration}ms)`);
+                
+              } catch (error) {
+                const duration = Date.now() - startTime;
+                
+                this.results.tests.push({
+                  name,
+                  status: 'FAILED',
+                  duration,
+                  error: error.message,
+                  timestamp: new Date().toISOString()
+                });
+                
+                this.results.summary.failed++;
+                console.log(`❌ ${name} - FAILED (${duration}ms): ${error.message}`);
+              }
+              
+              this.results.summary.total++;
+            }
+
+            async testHomepageLoad() {
+              const response = await this.page.goto(url, { 
+                waitUntil: 'networkidle0',
+                timeout: 30000 
+              });
+              
+              if (response.status() !== 200) {
+                throw new Error(`Expected status 200, got ${response.status()}`);
+              }
+
+              const title = await this.page.title();
+              if (!title || title.length < 5) {
+                throw new Error('Page title is missing or too short');
+              }
+
+              // Check for essential content
+              const hasContent = await this.page.evaluate(() => {
+                return document.body.innerText.length > 100;
+              });
+
+              if (!hasContent) {
+                throw new Error('Page appears to have no content');
+              }
+            }
+
+            async testNavigation() {
+              // Test navigation to blog page
+              const blogLink = await this.page.$('a[href*="/blog"], a[href="/blog"]');
+              if (!blogLink) {
+                throw new Error('Blog navigation link not found');
+              }
+
+              await Promise.all([
+                this.page.waitForNavigation({ waitUntil: 'networkidle0' }),
+                blogLink.click()
+              ]);
+
+              const currentUrl = this.page.url();
+              if (!currentUrl.includes('/blog')) {
+                throw new Error(`Expected to navigate to blog, but URL is: ${currentUrl}`);
+              }
+
+              // Navigate back to home
+              await this.page.goto(url, { waitUntil: 'networkidle0' });
+            }
+
+            async testContactForm() {
+              // Find contact form
+              const form = await this.page.$('form');
+              if (!form) {
+                throw new Error('Contact form not found');
+              }
+
+              // Check for required fields
+              const nameField = await this.page.$('input[name="name"], input#name');
+              const emailField = await this.page.$('input[name="email"], input#email, input[type="email"]');
+              const messageField = await this.page.$('textarea[name="message"], textarea#message');
+
+              if (!nameField) throw new Error('Name field not found');
+              if (!emailField) throw new Error('Email field not found');
+              if (!messageField) throw new Error('Message field not found');
+
+              // Test form validation
+              const submitButton = await this.page.$('button[type="submit"], input[type="submit"]');
+              if (!submitButton) throw new Error('Submit button not found');
+
+              // Try submitting empty form (should show validation)
+              await submitButton.click();
+              await this.page.waitForTimeout(1000);
+
+              // Fill out form with test data
+              await this.page.type('input[name="name"], input#name', 'E2E Test User');
+              await this.page.type('input[name="email"], input#email, input[type="email"]', 'test@example.com');
+              await this.page.type('textarea[name="message"], textarea#message', 'This is an automated test message from the E2E testing suite.');
+
+              // Note: We don't actually submit to avoid sending test emails
+              console.log('📝 Contact form fields successfully validated');
+            }
+
+            async testResponsiveDesign() {
+              const viewports = [
+                { width: 1920, height: 1080, name: 'Desktop' },
+                { width: 768, height: 1024, name: 'Tablet' },
+                { width: 375, height: 667, name: 'Mobile' }
+              ];
+
+              for (const viewport of viewports) {
+                await this.page.setViewport(viewport);
+                await this.page.reload({ waitUntil: 'networkidle0' });
+
+                // Check if content is visible and properly laid out
+                const isContentVisible = await this.page.evaluate(() => {
+                  const body = document.body;
+                  const rect = body.getBoundingClientRect();
+                  return rect.width > 0 && rect.height > 0;
+                });
+
+                if (!isContentVisible) {
+                  throw new Error(`Content not visible on ${viewport.name} (${viewport.width}x${viewport.height})`);
+                }
+
+                console.log(`📱 ${viewport.name} layout validated`);
+              }
+
+              // Reset to desktop viewport
+              await this.page.setViewport({ width: 1920, height: 1080 });
+            }
+
+            async testPerformance() {
+              // Navigate to homepage and measure performance
+              await this.page.goto(url, { waitUntil: 'networkidle0' });
+
+              const performanceMetrics = await this.page.evaluate(() => {
+                const navigation = performance.getEntriesByType('navigation')[0];
+                return {
+                  loadTime: navigation.loadEventEnd - navigation.fetchStart,
+                  domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
+                  firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || 0,
+                  resourceCount: performance.getEntriesByType('resource').length
+                };
+              });
+
+              // Check performance thresholds
+              if (performanceMetrics.loadTime > 10000) {
+                throw new Error(`Page load time too slow: ${performanceMetrics.loadTime}ms`);
+              }
+
+              if (performanceMetrics.domContentLoaded > 5000) {
+                throw new Error(`DOM content loaded too slow: ${performanceMetrics.domContentLoaded}ms`);
+              }
+
+              console.log(`⚡ Performance metrics: Load ${performanceMetrics.loadTime}ms, DOMContentLoaded ${performanceMetrics.domContentLoaded}ms`);
+            }
+
+            async testAccessibility() {
+              // Basic accessibility checks
+              const accessibilityIssues = await this.page.evaluate(() => {
+                const issues = [];
+
+                // Check for alt text on images
+                const imagesWithoutAlt = document.querySelectorAll('img:not([alt])');
+                if (imagesWithoutAlt.length > 0) {
+                  issues.push(`${imagesWithoutAlt.length} images without alt text`);
+                }
+
+                // Check for heading structure
+                const h1Elements = document.querySelectorAll('h1');
+                if (h1Elements.length === 0) {
+                  issues.push('No H1 heading found');
+                } else if (h1Elements.length > 1) {
+                  issues.push('Multiple H1 headings found');
+                }
+
+                // Check for form labels
+                const inputs = document.querySelectorAll('input, textarea, select');
+                const inputsWithoutLabels = Array.from(inputs).filter(input => {
+                  const id = input.getAttribute('id');
+                  const name = input.getAttribute('name');
+                  return !document.querySelector(`label[for="${id}"]`) && 
+                         !input.getAttribute('aria-label') &&
+                         !input.getAttribute('aria-labelledby');
+                });
+
+                if (inputsWithoutLabels.length > 0) {
+                  issues.push(`${inputsWithoutLabels.length} form inputs without proper labels`);
+                }
+
+                return issues;
+              });
+
+              if (accessibilityIssues.length > 0) {
+                console.warn(`⚠️  Accessibility issues found: ${accessibilityIssues.join(', ')}`);
+                // Don't fail the test for accessibility issues, just warn
+              }
+
+              console.log(`♿ Accessibility check completed (${accessibilityIssues.length} issues found)`);
+            }
+
+            async teardown() {
+              if (this.browser) {
+                await this.browser.close();
+              }
+            }
+
+            async run() {
+              try {
+                await this.setup();
+
+                await this.runTest('Homepage Load', () => this.testHomepageLoad());
+                await this.runTest('Navigation', () => this.testNavigation());
+                await this.runTest('Contact Form', () => this.testContactForm());
+                await this.runTest('Responsive Design', () => this.testResponsiveDesign());
+                await this.runTest('Performance', () => this.testPerformance());
+                await this.runTest('Accessibility', () => this.testAccessibility());
+
+              } finally {
+                await this.teardown();
+              }
+
+              // Save results
+              const fs = require('fs');
+              fs.writeFileSync('e2e-results.json', JSON.stringify(this.results, null, 2));
+
+              // Output summary
+              console.log('\n📊 E2E Test Summary:');
+              console.log(`Total: ${this.results.summary.total}`);
+              console.log(`Passed: ${this.results.summary.passed}`);
+              console.log(`Failed: ${this.results.summary.failed}`);
+
+              // Exit with error if any tests failed
+              if (this.results.summary.failed > 0) {
+                process.exit(1);
+              }
+            }
+          }
+
+          // Run the test suite
+          const testSuite = new E2ETestSuite();
+          testSuite.run().catch(console.error);
+          EOF
+
+      - name: Run E2E tests
+        env:
+          SITE_URL: ${{ secrets.SITE_URL }}
+        run: |
+          xvfb-run -a node e2e-tests.js
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-results-${{ github.run_id }}
+          path: e2e-results.json
+
+      - name: Report to GA4 if tests failed
+        if: failure()
+        uses: Dylan700/ga4-action@v1.4.1
+        with:
+          event-name: e2e_tests_failed
+          measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
+          api-secret: ${{ secrets.GA4_API_SECRET }}
+
+      - name: Create issue on critical failure
+        if: failure() && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let results = {};
+            
+            try {
+              results = JSON.parse(fs.readFileSync('e2e-results.json', 'utf8'));
+            } catch (e) {
+              results = { error: 'Failed to read E2E test results' };
+            }
+
+            const failedTests = results.tests?.filter(test => test.status === 'FAILED') || [];
+            
+            const title = `🚨 E2E Tests Failed - ${new Date().toISOString()}`;
+            const body = `
+            ## End-to-End Tests Failed
+            
+            **Failed Tests:** ${failedTests.length}
+            **Total Tests:** ${results.summary?.total || 0}
+            
+            ### Failed Test Details
+            ${failedTests.map(test => `- **${test.name}**: ${test.error}`).join('\n')}
+            
+            ### Full Results
+            \`\`\`json
+            ${JSON.stringify(results, null, 2)}
+            \`\`\`
+            
+            ### Next Steps
+            1. Check the website manually to verify functionality
+            2. Review server logs for any issues
+            3. Run tests locally to reproduce the issue
+            
+            _This issue was automatically created by the E2E Testing workflow._
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['bug', 'e2e-testing', 'automated']
+            });

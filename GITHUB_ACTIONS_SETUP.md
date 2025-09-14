@@ -53,7 +53,26 @@ These should be set in Vercel dashboard, not GitHub secrets:
 
 ### 5. Lighthouse Performance Audit (`lighthouse-audit.yml`)
 - **Trigger**: Daily at 03:30 UTC, Manual dispatch
-- **Purpose**: Performance monitoring and reports
+- **Purpose**: Performance monitoring with Chromium
+- **Features**: Custom URL input, GA4 failure reporting
+- **Status**: ✅ Enhanced with Chromium
+
+### 6. Chromium Website Monitor (`chromium-monitor.yml`)
+- **Trigger**: Every 4 hours, Manual dispatch
+- **Purpose**: Comprehensive website monitoring with Puppeteer
+- **Features**: Content verification, functionality testing, performance metrics, accessibility checks
+- **Status**: ✅ Configured
+
+### 7. Visual Regression Testing (`visual-regression.yml`)
+- **Trigger**: Push to main, Pull requests, Manual dispatch
+- **Purpose**: Detect visual changes across different viewports
+- **Features**: Desktop/tablet/mobile screenshots, pixel-perfect comparison, PR comments
+- **Status**: ✅ Configured
+
+### 8. End-to-End Testing (`e2e-testing.yml`)
+- **Trigger**: Push to main, Pull requests, Daily at 6 AM, Manual dispatch
+- **Purpose**: Comprehensive functionality testing
+- **Features**: Navigation testing, form validation, responsive design, performance, accessibility
 - **Status**: ✅ Configured
 
 ## Manual Workflow Triggers
@@ -61,7 +80,10 @@ These should be set in Vercel dashboard, not GitHub secrets:
 You can manually trigger these workflows from the GitHub Actions tab:
 - Website Health Check
 - WordPress Deployment  
-- Lighthouse Performance Audit
+- Lighthouse Performance Audit (with custom URL input)
+- Chromium Website Monitor (with test type selection)
+- Visual Regression Testing (with baseline update option)
+- End-to-End Testing
 
 ## GA4 Integration Details
 

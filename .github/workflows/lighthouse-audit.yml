@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '30 3 * * *'
   workflow_dispatch:
+    inputs:
+      url:
+        description: 'URL to audit (leave empty to use SITE_URL secret)'
+        required: false
+        type: string
 
 jobs:
   lhci:
@@ -17,19 +22,48 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Lighthouse CI
-        run: npm i -g @lhci/cli@0.12.x
+      - name: Install dependencies
+        run: |
+          npm i -g @lhci/cli@0.12.x
+          # Install Chromium dependencies
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
 
-      - name: Run Lighthouse CI against production URL
+      - name: Set audit URL
+        id: set-url
+        run: |
+          if [ -n "${{ inputs.url }}" ]; then
+            echo "AUDIT_URL=${{ inputs.url }}" >> $GITHUB_OUTPUT
+          elif [ -n "${{ secrets.SITE_URL }}" ]; then
+            echo "AUDIT_URL=${{ secrets.SITE_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "No URL provided" >&2
+            exit 1
+          fi
+
+      - name: Run Lighthouse CI with Chromium
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CHROME_PATH: /usr/bin/chromium-browser
         run: |
-          if [ -z "${{ secrets.SITE_URL }}" ]; then echo "SITE_URL secret not set"; exit 1; fi
-          lhci autorun --collect.url=${{ secrets.SITE_URL }} --upload.target=temporary-public-storage
+          lhci autorun \
+            --collect.url=${{ steps.set-url.outputs.AUDIT_URL }} \
+            --collect.numberOfRuns=3 \
+            --collect.chromePath=/usr/bin/chromium-browser \
+            --collect.chromeFlags="--no-sandbox --disable-dev-shm-usage --headless" \
+            --upload.target=temporary-public-storage
 
       - name: Save Lighthouse report artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: lighthouse-report
+          name: lighthouse-report-${{ github.run_id }}
           path: .lighthouseci/*
+
+      - name: Report to GA4 if performance issues
+        if: failure()
+        uses: Dylan700/ga4-action@v1.4.1
+        with:
+          event-name: lighthouse_audit_failed
+          measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
+          api-secret: ${{ secrets.GA4_API_SECRET }}
