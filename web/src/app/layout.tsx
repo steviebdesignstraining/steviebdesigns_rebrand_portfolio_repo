@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import Analytics from "@/components/Analytics";
@@ -36,6 +37,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Cookiebot GDPR Cookie Consent */}
+        <Script
+          id="Cookiebot"
+          src="https://consent.cookiebot.com/uc.js"
+          data-cbid="9f130053-c0c3-4b94-9090-bd480f01b249"
+          strategy="beforeInteractive"
+        />
+      </head>
       <body 
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
