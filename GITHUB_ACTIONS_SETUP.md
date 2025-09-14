@@ -24,6 +24,11 @@ Navigate to your repository → Settings → Secrets and variables → Actions �
 ### Website Monitoring
 - `SITE_URL`: `https://steviebdesigns.co.uk`
 
+### Contact Form Email (Vercel Environment Variables)
+These should be set in Vercel dashboard, not GitHub secrets:
+- `GMAIL_USER`: `steviebdesigns1@gmail.com`
+- `GMAIL_APP_PASSWORD`: Your Gmail app-specific password
+
 ## Workflow Overview
 
 ### 1. Vercel Deployment (`vercel-deploy.yml`)
@@ -86,6 +91,12 @@ You can manually trigger these workflows from the GitHub Actions tab:
 1. Ensure `SITE_URL` secret is set correctly
 2. Check that the website is actually accessible
 3. Review curl output in workflow logs
+
+### Contact Form 500 Errors
+1. Set `GMAIL_USER` and `GMAIL_APP_PASSWORD` in Vercel environment variables
+2. Generate Gmail app-specific password at: https://myaccount.google.com/apppasswords
+3. Check Vercel function logs for specific error details
+4. Verify Gmail SMTP settings and authentication
 
 ## Next Steps
 

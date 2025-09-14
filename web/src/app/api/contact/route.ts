@@ -22,14 +22,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check for required environment variables
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error('Missing email configuration:', {
+        hasGmailUser: !!process.env.GMAIL_USER,
+        hasGmailPassword: !!process.env.GMAIL_APP_PASSWORD
+      });
+      return NextResponse.json(
+        { error: 'Email service is not properly configured' },
+        { status: 503 }
+      );
+    }
+
     // Create transporter using Gmail SMTP
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.GMAIL_USER, // steviebdesigns1@gmail.com
-        pass: process.env.GMAIL_APP_PASSWORD, // App-specific password
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_APP_PASSWORD,
       },
     });
+
+    // Verify transporter configuration
+    try {
+      await transporter.verify();
+    } catch (verifyError) {
+      console.error('SMTP verification failed:', verifyError);
+      return NextResponse.json(
+        { error: 'Email service configuration error' },
+        { status: 503 }
+      );
+    }
 
     // Email content
     const mailOptions = {
@@ -87,9 +110,13 @@ export async function POST(request: NextRequest) {
     );
 
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error('Error sending email:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined
+    });
     return NextResponse.json(
-      { error: 'Failed to send email' },
+      { error: 'Failed to send email. Please try again or contact me directly.' },
       { status: 500 }
     );
   }
