@@ -7,7 +7,6 @@ on:
 
 jobs:
   deploy:
-    if: ${{ secrets.WP_HOST != '' && secrets.WP_USER != '' && secrets.WP_TARGET_DIR != '' && secrets.SSH_PRIVATE_KEY != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code

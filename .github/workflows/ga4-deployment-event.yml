@@ -14,5 +14,3 @@ jobs:
           event-name: deployment
           measurement-id: ${{ secrets.GA4_MEASUREMENT_ID }}
           api-secret: ${{ secrets.GA4_API_SECRET }}
-          client-id: ${{ github.run_id }}
-          params: '{"branch":"${{ github.ref_name }}","commit":"${{ github.sha }}","repo":"${{ github.repository }}"}'
