@@ -52,33 +52,60 @@ export default function MobileMenu() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3 }}
           >
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+            {/* Full page black background */}
+            <div className="absolute inset-0 bg-black" onClick={() => setIsOpen(false)} />
+            
+            {/* Navigation content */}
             <motion.div
-              className="absolute top-0 right-0 h-full w-80 max-w-[85vw] bg-background border-l border-foreground/10 shadow-xl"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="absolute inset-0 flex flex-col justify-center items-center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
-              <div className="p-6 flex flex-col justify-center items-center h-full">
-                <nav className="space-y-6 text-center">
-                  {menuItems.map((item) => (
+              {/* Exit button */}
+              <button
+                type="button"
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close menu"
+              >
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+
+              {/* Navigation links */}
+              <nav className="space-y-8 text-center">
+                {menuItems.map((item, index) => (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.3 }}
+                  >
                     <Link
-                      key={item.href}
                       href={item.href}
-                      className="block py-3 px-4 text-foreground text-lg hover:opacity-80 transition-opacity"
+                      className="block py-4 px-6 text-white text-2xl font-medium hover:text-white/80 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.label}
                     </Link>
-                  ))}
-                </nav>
-                <div className="mt-8">
-                  <ThemeToggle />
-                </div>
-              </div>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* Theme toggle */}
+              <motion.div
+                className="mt-12"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.3 }}
+              >
+                <ThemeToggle />
+              </motion.div>
             </motion.div>
           </motion.div>
         )}
