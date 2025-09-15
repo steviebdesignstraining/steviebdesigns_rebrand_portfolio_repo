@@ -48,27 +48,26 @@ export default function MobileMenu() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-50 md:hidden"
+            className="fixed inset-0 z-50 md:hidden bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
+            onClick={() => setIsOpen(false)}
           >
-            {/* Full page black background */}
-            <div className="absolute inset-0 bg-black" onClick={() => setIsOpen(false)} />
-            
-            {/* Navigation content */}
+            {/* Navigation content container with solid background */}
             <motion.div
-              className="absolute inset-0 flex flex-col justify-center items-center"
+              className="relative w-full h-full flex flex-col justify-center items-center bg-black"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Exit button */}
               <button
                 type="button"
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+                className="absolute top-6 right-6 p-3 rounded-full bg-white/20 hover:bg-white/30 transition-colors z-10"
                 onClick={() => setIsOpen(false)}
                 aria-label="Close menu"
               >
