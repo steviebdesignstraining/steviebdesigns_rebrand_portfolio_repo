@@ -57,7 +57,7 @@ export default function MobileMenu() {
           >
             {/* Navigation content container with solid background */}
             <motion.div
-              className="relative w-full h-full flex flex-col justify-center items-center bg-black"
+              className="relative w-full h-full flex flex-col justify-center items-center bg-black pt-20 pb-8"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -77,7 +77,7 @@ export default function MobileMenu() {
               </button>
 
               {/* Navigation links */}
-              <nav className="space-y-8 text-center">
+              <nav className="space-y-6 text-center max-h-[70vh] overflow-y-auto">
                 {menuItems.map((item, index) => (
                   <motion.div
                     key={item.href}
@@ -87,7 +87,7 @@ export default function MobileMenu() {
                   >
                     <Link
                       href={item.href}
-                      className="block py-4 px-6 text-white text-2xl font-medium hover:text-white/80 transition-colors"
+                      className="block py-3 px-6 text-white text-xl font-medium hover:text-white/80 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       {item.label}
@@ -98,7 +98,7 @@ export default function MobileMenu() {
 
               {/* Theme toggle */}
               <motion.div
-                className="mt-12"
+                className="mt-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.3 }}
