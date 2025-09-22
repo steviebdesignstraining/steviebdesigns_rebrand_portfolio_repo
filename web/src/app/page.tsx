@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
-import MobileMenu from "@/components/MobileMenu";
+import MobileNav from "@/components/MobileMenu";
 import AnimatedBackground from "@/components/AnimatedBackground";
 import PolaroidStack from "@/components/PolaroidStack";
 import { MotionDiv } from "@/components/motion";
@@ -28,7 +28,7 @@ export default function Home() {
             <Link href="#contact" className="hover:opacity-80">Contact</Link>
             <ThemeToggle />
           </div>
-          <MobileMenu />
+          <MobileNav />
         </nav>
       </header>
 
@@ -52,7 +52,7 @@ export default function Home() {
         <MotionDiv id="about" className="max-w-5xl mx-auto px-4 py-12 scroll-mt-20" initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-80px" }} transition={{ duration: 0.5 }}>
           <h2 className="text-2xl sm:text-3xl font-semibold">About Me</h2>
           <p className="mt-4 text-foreground/80">
-            Quality Assurance professional with over 10 years of experience in automation and manual testing, expert in test automation and CI/CD pipeline integration. Contracting for over 5 years and seeking both contract and permanent roles. Key achievements include the successful implementation of shift-left QA strategies in two products and the development of high-level automation test scripts using Playwright, Cypress, WebdriverIO, Appium, Detox and Maestro. Seeking a Test Engineer position, where my process evaluation and cross-function team coordination skills can support the business mission of innovating the testing process in a SDLC domain. Proficient in designing, implementing, and managing tests across product suites, with a strong track record in enhancing quality control and assurance metrics. During my tenure, CI/CD pipelines were built and maintained to improve real-time visibility and efficiency, and multiple automation frameworks were evaluated to match team skillsets and project scalability. For more details, visit <a href="https://www.steviebdesigns.co.uk" target="_blank" rel="noopener noreferrer" className="text-blue-600 dark:text-blue-400 hover:underline">www.steviebdesigns.co.uk</a>.
+            Quality Assurance professional with over 10 years of experience in automation and manual testing, expert in test automation and CI/CD pipeline integration. Contracting for over 5 years and seeking both contract and permanent roles. Key achievements include the successful implementation of shift-left QA strategies in two products and the development of high-level automation test scripts using Playwright, Cypress, WebdriverIO, Appium, Detox and Maestro. Seeking a Test Engineer position, where my process evaluation and cross-function team coordination skills can support the business mission of innovating the testing process in a SDLC domain. Proficient in designing, implementing, and managing tests across product suites, with a strong track record in enhancing quality control and assurance metrics. During my tenure, CI/CD pipelines were built and maintained to improve real-time visibility and efficiency, and multiple automation frameworks were evaluated to match team skillsets and project scalability.
           </p>
         </MotionDiv>
 

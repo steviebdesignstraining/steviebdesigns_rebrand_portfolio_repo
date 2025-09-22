@@ -37,7 +37,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
+      <body 
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
+      >
         {/* Cookiebot GDPR Cookie Consent */}
         <Script
           id="Cookiebot"
@@ -45,11 +48,6 @@ export default function RootLayout({
           data-cbid="9f130053-c0c3-4b94-9090-bd480f01b249"
           strategy="beforeInteractive"
         />
-      </head>
-      <body 
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
         <ThemeProvider 
           attribute="class" 
           defaultTheme="dark" 
