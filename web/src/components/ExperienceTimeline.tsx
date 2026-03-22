@@ -37,7 +37,6 @@ const experienceData: ExperienceItem[] = [
     skills: ["Playwright", "SQL", "Azure DevOps", "CI/CD", "Agile", "Scrum", "Kanban", "Salesforce Marketing Cloud", "Mailosaur", "Manual Testing", "Regression Testing", "Integration Testing", "Exploratory Testing", "Cross-browser Testing"],
     type: "work",
     employmentType: "Contract",
-    videoUrl: "https://player.vimeo.com/video/1147028565?h=5ee37aaee9",
     achievements: [
       "Performed functional, regression, integration, and exploratory testing to ensure product quality",
       "Developed and maintained automated test suites using tools such as Playwright and SQL",

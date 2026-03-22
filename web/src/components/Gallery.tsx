@@ -18,6 +18,15 @@ type GalleryItem = {
 const galleryItems: GalleryItem[] = [
   // QA Automation Videos
   {
+    id: "qa0",
+    title: "GoCompare QA Automation",
+    description: "Automated testing demonstration for GoCompare insurance platform",
+    image: "/thumb.jpg",
+    category: "QA Automation",
+    type: "video",
+    videoUrl: "https://player.vimeo.com/video/1147028565?h=5ee37aaee9"
+  },
+  {
     id: "qa1",
     title: "Playwright with TypeScript",
     description: "High-level automated testing showcasing TypeScript integration with Playwright.",
