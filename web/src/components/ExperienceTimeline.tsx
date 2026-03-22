@@ -13,9 +13,45 @@ type ExperienceItem = {
   employmentType: "Perm" | "Contract" | "Work Experience";
   achievements?: string[];
   location?: string;
+  videoUrl?: string;
+};
+
+// Validate that video URL is from a trusted domain
+const isTrustedVideoUrl = (url: string): boolean => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.hostname === 'player.vimeo.com';
+  } catch {
+    return false;
+  }
 };
 
 const experienceData: ExperienceItem[] = [
+  {
+    id: "16",
+    title: "Senior QA Automation Engineer",
+    company: "GoCompare",
+    period: "01/2026 - 03/2026",
+    location: "London, United Kingdom",
+    description: "Leading QA automation initiatives for GoCompare's insurance comparison platform, focusing on test automation, CI/CD integration, and quality assurance processes.",
+    skills: ["Playwright", "SQL", "Azure DevOps", "CI/CD", "Agile", "Scrum", "Kanban", "Salesforce Marketing Cloud", "Mailosaur", "Manual Testing", "Regression Testing", "Integration Testing", "Exploratory Testing", "Cross-browser Testing"],
+    type: "work",
+    employmentType: "Contract",
+    videoUrl: "https://player.vimeo.com/video/1147028565?h=5ee37aaee9",
+    achievements: [
+      "Performed functional, regression, integration, and exploratory testing to ensure product quality",
+      "Developed and maintained automated test suites using tools such as Playwright and SQL",
+      "Identified, logged, and tracked defects using tools such as Azure DevOps, ensuring timely resolution with development teams",
+      "Integrated automated tests into CI/CD pipelines (e.g., Azure DevOps) to support continuous delivery",
+      "Collaborated closely with developers, product owners, and UX teams in Agile (Scrum/Kanban) environments",
+      "Participated in sprint planning, daily stand-ups, and retrospectives, contributing to continuous improvement",
+      "Performed cross-browser and cross-device testing to ensure a consistent user experience",
+      "Validated data integrity through SQL queries, backend database checks and automation scripts",
+      "Contributed to improving QA processes, standards, and best practices within the team",
+      "Supported release testing and production deployments, ensuring minimal defects in live environments",
+      "Triggered CRM Email marketing using Salesforce Marketing Cloud, and automated email templates using Mailosaur and Playwright"
+    ]
+  },
   {
     id: "1",
     title: "Mobile QA Engineer",
@@ -324,6 +360,23 @@ export default function ExperienceTimeline() {
               </div>
               
               <p className="text-foreground/70 mb-4">{item.description}</p>
+              
+              {item.videoUrl && isTrustedVideoUrl(item.videoUrl) && (
+                <div className="mt-4">
+                  <div style={{ padding: '56.25% 0 0 0', position: 'relative' }}>
+                    <iframe
+                      src={item.videoUrl}
+                      frameBorder="0"
+                      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                      loading="lazy"
+                      style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                      title="QA Automation Demo"
+                    />
+                  </div>
+                </div>
+              )}
               
               <div className="flex flex-wrap gap-2">
                 {item.skills.map((skill) => (
