@@ -1,1 +1,17 @@
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Archives
+*.zip
+*.tar.gz
+
+# Environment
+.env
+.env.local
+
+# Config
 .config/
