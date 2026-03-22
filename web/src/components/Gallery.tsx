@@ -21,7 +21,7 @@ const galleryItems: GalleryItem[] = [
     id: "qa0",
     title: "GoCompare QA Automation",
     description: "Automated testing demonstration for GoCompare insurance platform",
-    image: "/thumb.jpg",
+    image: "/Cyborg and cityscape at night.png",
     category: "QA Automation",
     type: "video",
     videoUrl: "https://player.vimeo.com/video/1147028565?h=5ee37aaee9"
