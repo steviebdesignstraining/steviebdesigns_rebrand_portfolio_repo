@@ -10,9 +10,14 @@ type GalleryItem = {
   description: string;
   image?: string;
   category: string;
-  type: "image" | "video" | "placeholder";
+  type: "image" | "video";
   videoUrl?: string;
 };
+
+const hasMedia = (item: GalleryItem) =>
+  item.type === "video"
+    ? Boolean(item.image && item.videoUrl)
+    : Boolean(item.image);
 
 // Updated gallery data with design images and QA automation videos
 const galleryItems: GalleryItem[] = [
@@ -22,7 +27,8 @@ const galleryItems: GalleryItem[] = [
     title: "GoCompare QA Automation",
     description: "Automated testing demonstration for GoCompare insurance platform",
     category: "QA Automation",
-    type: "placeholder",
+    type: "video",
+    // Add image and videoUrl when media is ready
   },
   {
     id: "qa1",
@@ -157,16 +163,26 @@ export default function Gallery() {
 
       {/* Gallery grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {filteredItems.map((item) => (
+        {filteredItems.map((item) => {
+          const isInteractive = hasMedia(item);
+
+          return (
           <motion.div
             key={item.id}
-            className={`group ${item.type !== "placeholder" ? "cursor-pointer" : "cursor-default"}`}
-            onClick={() => item.type !== "placeholder" && setSelectedItem(item)}
-            whileHover={item.type !== "placeholder" ? { scale: 1.02 } : undefined}
+            className={`group ${isInteractive ? "cursor-pointer" : ""}`}
+            onClick={() => isInteractive && setSelectedItem(item)}
+            whileHover={isInteractive ? { scale: 1.02 } : undefined}
             transition={{ duration: 0.2 }}
+            aria-disabled={!isInteractive}
           >
-            <div className="aspect-video rounded-lg bg-foreground/5 overflow-hidden border border-foreground/10 group-hover:border-foreground/20 transition-colors relative">
-              {item.type === "placeholder" ? null : (
+            <div
+              className={`aspect-video rounded-lg overflow-hidden border transition-colors relative ${
+                isInteractive
+                  ? "bg-foreground/5 border-foreground/10 group-hover:border-foreground/20"
+                  : "bg-foreground/[0.03] border-dashed border-foreground/20"
+              }`}
+            >
+              {isInteractive ? (
                 <>
                   <Image
                     src={item.image!}
@@ -185,10 +201,17 @@ export default function Gallery() {
                     </div>
                   )}
                 </>
+              ) : (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-foreground/40">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-xs font-medium">Media coming soon</span>
+                </div>
               )}
             </div>
             <div className="mt-3">
-              <h3 className="font-medium group-hover:text-foreground/80 transition-colors">
+              <h3 className={`font-medium transition-colors ${isInteractive ? "group-hover:text-foreground/80" : "text-foreground/80"}`}>
                 {item.title}
               </h3>
               <p className="text-sm text-foreground/70 mt-1">
@@ -199,12 +222,13 @@ export default function Gallery() {
               </span>
             </div>
           </motion.div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Lightbox */}
       <AnimatePresence>
-        {selectedItem && (
+        {selectedItem && hasMedia(selectedItem) && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
@@ -234,7 +258,7 @@ export default function Gallery() {
                       title={selectedItem.title}
                     />
                   </div>
-                ) : (
+                ) : selectedItem.image ? (
                   <Image
                     src={selectedItem.image}
                     alt={selectedItem.title}
@@ -242,7 +266,7 @@ export default function Gallery() {
                     height={450}
                     className="w-full h-auto max-h-[60vh] object-contain"
                   />
-                )}
+                ) : null}
                 <button
                   onClick={() => setSelectedItem(null)}
                   className="absolute top-4 right-4 p-2 bg-black/50 text-white rounded-full hover:bg-black/70 transition-colors"
