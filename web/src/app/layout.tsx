@@ -25,7 +25,7 @@ export const metadata: Metadata = {
       { url: '/logo/steviebdesigns-logo-symbol.png', sizes: 'any', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: "/apple-icon", sizes: "180x180", type: "image/png" },
     ],
   },
 };

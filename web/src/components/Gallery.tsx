@@ -24,11 +24,12 @@ const galleryItems: GalleryItem[] = [
   // QA Automation Videos
   {
     id: "qa0",
-    title: "GoCompare QA Automation",
-    description: "Automated testing demonstration for GoCompare insurance platform",
+    title: "Orange HR app QA Automation",
+    description: "Using Playwright with POM and Github CI/CD pipeline",
+    image: "/thumb-orange-hr.jpg",
     category: "QA Automation",
     type: "video",
-    // Add image and videoUrl when media is ready
+    videoUrl: "https://player.vimeo.com/video/1219265304?h=7d734074f4"
   },
   {
     id: "qa1",
