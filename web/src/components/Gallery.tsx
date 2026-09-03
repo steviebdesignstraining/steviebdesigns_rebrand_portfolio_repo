@@ -67,6 +67,24 @@ const galleryItems: GalleryItem[] = [
     type: "video",
     videoUrl: "https://player.vimeo.com/video/1045752431?h=bbfaac50fb"
   },
+  {
+    id: "qa5",
+    title: "Maestro with Copy",
+    description: "Using Maestro with POM, Github Action CI/CD Pipeline",
+    image: "/Maestro.png",
+    category: "QA Automation",
+    type: "video",
+    videoUrl: "https://player.vimeo.com/video/1223395918?h=579a75dc15"
+  },
+  {
+    id: "qa6",
+    title: "WebdriverIO",
+    description: "Using WebdriverIO with POM, Github Action CI/CD Pipeline",
+    image: "/WebdriverIO.png",
+    category: "QA Automation",
+    type: "video",
+    videoUrl: "https://player.vimeo.com/video/1223639620?h=ed4bb36437"
+  },
   // Design Images
   {
     id: "design1",
