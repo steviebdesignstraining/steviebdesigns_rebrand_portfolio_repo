@@ -42,12 +42,12 @@ const galleryItems: GalleryItem[] = [
   },
   {
     id: "qa2",
-    title: "WebdriverIO with Appium",
+    title: "WebdriverIO with Appium and POM",
     description: "Mobile automation testing combining WebdriverIO and Appium for cross-platform testing.",
     image: "/thumb (2).jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://player.vimeo.com/video/866884683?h=cbea33cad5"
+    videoUrl: "https://player.vimeo.com/video/1223928221?badge=0&autopause=0&player_id=0&app_id=58479"
   },
   {
     id: "qa3",
