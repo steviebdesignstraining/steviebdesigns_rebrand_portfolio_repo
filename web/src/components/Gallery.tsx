@@ -47,7 +47,7 @@ const galleryItems: GalleryItem[] = [
     image: "/thumb (2).jpg",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://player.vimeo.com/video/1223928221?badge=0&autopause=0&player_id=0&app_id=58479"
+    videoUrl: "https://player.vimeo.com/video/866884683?h=cbea33cad5"
   },
   {
     id: "qa3",
