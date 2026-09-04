@@ -83,7 +83,7 @@ const galleryItems: GalleryItem[] = [
     image: "/WebdriverIO.png",
     category: "QA Automation",
     type: "video",
-    videoUrl: "https://player.vimeo.com/video/1223639620?h=ed4bb36437"
+    videoUrl: "https://player.vimeo.com/video/1223928221?h=078c9b9943"
   },
   // Design Images
   {
