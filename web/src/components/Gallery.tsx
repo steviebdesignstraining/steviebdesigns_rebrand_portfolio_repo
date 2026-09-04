@@ -42,7 +42,7 @@ const galleryItems: GalleryItem[] = [
   },
   {
     id: "qa2",
-    title: "WebdriverIO with Appium and POM",
+    title: "WebdriverIO with Appium",
     description: "Mobile automation testing combining WebdriverIO and Appium for cross-platform testing.",
     image: "/thumb (2).jpg",
     category: "QA Automation",
@@ -78,7 +78,7 @@ const galleryItems: GalleryItem[] = [
   },
   {
     id: "qa6",
-    title: "WebdriverIO",
+    title: "WebdriverIO with Appium and POM",
     description: "Using WebdriverIO with POM, Github Action CI/CD Pipeline",
     image: "/WebdriverIO.png",
     category: "QA Automation",
